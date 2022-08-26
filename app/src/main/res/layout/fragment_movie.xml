@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="8dp"
+    android:paddingBottom="?actionBarSize"
+    tools:context=".ui.home.movie.MovieFragment">
+
+    <RelativeLayout
+        android:id="@+id/upcoming_movie"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <View
+            android:id="@+id/indicator_title"
+            android:layout_width="8dp"
+            android:layout_height="35dp"
+            android:background="@color/yellow_light" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="8dp"
+            android:layout_toEndOf="@+id/indicator_title"
+            android:fontFamily="@font/poppinssemibold"
+            android:gravity="center_vertical"
+            android:text="Upcoming"
+            android:textColor="@color/grey_dark"
+            android:textSize="20sp" />
+
+
+        <LinearLayout
+            android:id="@+id/see_all_upcoming"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="@font/poppinsregular"
+                android:text="See all"
+                android:textColor="@color/grey_dark"
+                android:textSize="12sp" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/bg_circle_yellow"
+                android:src="@drawable/ic_arrow_dark_grey" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_upcoming_movie"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/upcoming_movie"
+        tools:itemCount="1"
+        tools:listitem="@layout/item_row_upcoming" />
+
+    <RelativeLayout
+        android:id="@+id/top_rated_movie"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rv_upcoming_movie">
+
+        <View
+            android:id="@+id/indicator_title2"
+            android:layout_width="8dp"
+            android:layout_height="35dp"
+            android:background="@color/yellow_light" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="8dp"
+            android:layout_toEndOf="@+id/indicator_title2"
+            android:fontFamily="@font/poppinssemibold"
+            android:gravity="center_vertical"
+            android:text="Top Rated"
+            android:textColor="@color/grey_dark"
+            android:textSize="20sp" />
+
+        <LinearLayout
+            android:id="@+id/see_all_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="@font/poppinsregular"
+                android:text="See all"
+                android:textColor="@color/grey_dark"
+                android:textSize="12sp" />
+
+            <ImageView
+                android:id="@+id/icon_arrow_right2"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/bg_circle_yellow"
+                android:src="@drawable/ic_arrow_dark_grey" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_top_rated_movie"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top_rated_movie"
+        tools:itemCount="1"
+        tools:listitem="@layout/item_row_top_rated" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/rv_upcoming_movie"
+        app:layout_constraintEnd_toEndOf="@+id/rv_upcoming_movie"
+        app:layout_constraintStart_toStartOf="@+id/rv_upcoming_movie"
+        app:layout_constraintTop_toTopOf="@+id/rv_upcoming_movie" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

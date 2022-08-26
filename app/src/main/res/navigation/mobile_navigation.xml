@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.bagas.project.filmbase.ui.home.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/navigation_search"
+        android:name="com.bagas.project.filmbase.ui.search.SearchFragment"
+        android:label="@string/title_search"
+        tools:layout="@layout/fragment_search" />
+
+    <fragment
+        android:id="@+id/navigation_favorite"
+        android:name="com.bagas.project.filmbase.ui.favorite.FavoriteFragment"
+        android:label="@string/title_favorite"
+        tools:layout="@layout/fragment_favorite" />
+    <activity
+        android:id="@+id/seeAllActivity"
+        android:name="com.bagas.project.filmbase.ui.SeeAllActivity"
+        android:label="activity_see_all"
+        tools:layout="@layout/activity_see_all" />
+    <fragment
+        android:id="@+id/movieFragment"
+        android:name="com.bagas.project.filmbase.ui.home.movie.MovieFragment"
+        android:label="fragment_movie"
+        tools:layout="@layout/fragment_movie" />
+    <activity
+        android:id="@+id/detailActivity"
+        android:name="com.bagas.project.filmbase.ui.DetailActivity"
+        android:label="activity_detail"
+        tools:layout="@layout/activity_detail" />
+</navigation>
