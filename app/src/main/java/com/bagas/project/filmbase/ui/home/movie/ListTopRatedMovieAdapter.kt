@@ -1,20 +1,27 @@
 package com.bagas.project.filmbase.ui.home.movie
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bagas.project.filmbase.BuildConfig
+import com.bagas.project.filmbase.data.local.TopRatedMovieEntity
+import com.bagas.project.filmbase.data.local.UpcomingMovieEntity
 import com.bagas.project.filmbase.data.responses.TopRatedMoviesItem
 import com.bagas.project.filmbase.databinding.ItemRowTopRatedBinding
+import com.bagas.project.filmbase.ui.DetailActivity
 import com.bumptech.glide.Glide
 
-class ListTopRatedMovieAdapter(private val listTopRatedMovies: List<TopRatedMoviesItem>): RecyclerView.Adapter<ListTopRatedMovieAdapter.ListTopRatedMovieVH>() {
+class ListTopRatedMovieAdapter: ListAdapter<TopRatedMovieEntity, ListTopRatedMovieAdapter.ListTopRatedMovieVH>(DIFF_CALLBACK
+) {
 
-    private lateinit var onItemClickCallback: OnItemClickCallback
-
-    fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback) {
-        this.onItemClickCallback = onItemClickCallback
-    }
+//    private lateinit var onItemClickCallback: OnItemClickCallback
+//
+//    fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback) {
+//        this.onItemClickCallback = onItemClickCallback
+//    }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -28,27 +35,52 @@ class ListTopRatedMovieAdapter(private val listTopRatedMovies: List<TopRatedMovi
         holder: ListTopRatedMovieVH,
         position: Int
     ) {
-        val item = listTopRatedMovies[position]
-
-        holder.title.text = item.title
-        holder.rating.text = item.voteAverage.toString().trim()
-
-        Glide.with(holder.itemView.context)
-            .load(BuildConfig.IMAGE_URL + item.posterPath)
-            .into(holder.poster)
-
-        holder.itemView.setOnClickListener { onItemClickCallback.onItemClicked(listTopRatedMovies[holder.adapterPosition]) }
+        val item = getItem(position)
+        if (item != null) {
+            holder.bind(item)
+        }
     }
 
-    override fun getItemCount(): Int = listTopRatedMovies.size
+    inner class ListTopRatedMovieVH(private val binding: ItemRowTopRatedBinding): RecyclerView.ViewHolder(binding.root) {
+        fun bind(topRatedMovie: TopRatedMovieEntity) {
+            with(binding) {
+                tvItemTitle.text = topRatedMovie.title
+                tvItemRating.text = topRatedMovie.voteAverage.toString().trim()
 
-    inner class ListTopRatedMovieVH(binding: ItemRowTopRatedBinding): RecyclerView.ViewHolder(binding.root) {
-        var title = binding.tvItemTitle
-        var rating = binding.tvItemRating
-        var poster = binding.tvItemImg
+                Glide.with(itemView.context)
+                    .load(BuildConfig.IMAGE_URL + topRatedMovie.posterPath)
+                    .into(tvItemImg)
+
+                itemView.setOnClickListener {
+                    val intent = Intent(itemView.context, DetailActivity::class.java)
+                    intent.putExtra(DetailActivity.EXTRA_MOVIE_DETAIL, topRatedMovie.id)
+                    itemView.context.startActivity(intent)
+                }
+            }
+        }
     }
 
-    interface OnItemClickCallback {
-        fun onItemClicked(data: TopRatedMoviesItem)
+    companion object {
+        val DIFF_CALLBACK: DiffUtil.ItemCallback<TopRatedMovieEntity> =
+            object : DiffUtil.ItemCallback<TopRatedMovieEntity>() {
+                override fun areItemsTheSame(
+                    oldItem: TopRatedMovieEntity,
+                    newItem: TopRatedMovieEntity
+                ): Boolean {
+                    return oldItem.title == newItem.title
+                }
+
+                override fun areContentsTheSame(
+                    oldItem: TopRatedMovieEntity,
+                    newItem: TopRatedMovieEntity
+                ): Boolean {
+                    return oldItem == newItem
+                }
+
+            }
     }
+
+//    interface OnItemClickCallback {
+//        fun onItemClicked(data: TopRatedMoviesItem)
+//    }
 }

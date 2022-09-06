@@ -4,14 +4,19 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.bagas.project.filmbase.BuildConfig
+import com.bagas.project.filmbase.data.local.FavoriteMovieEntity
+import com.bagas.project.filmbase.data.local.FavoriteTvEntity
 import com.bagas.project.filmbase.data.remote.ApiConfig
+import com.bagas.project.filmbase.data.repository.MovieRepository
 import com.bagas.project.filmbase.data.responses.*
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class DetailViewModel : ViewModel() {
+class DetailViewModel(private val movieRepository: MovieRepository) : ViewModel() {
 
     private val _movieDetail = MutableLiveData<MovieDetailResponse?>()
     val movieDetail: LiveData<MovieDetailResponse?> = _movieDetail
@@ -50,7 +55,7 @@ class DetailViewModel : ViewModel() {
             }
 
             override fun onFailure(call: Call<MovieDetailResponse>, t: Throwable) {
-                TODO("Not yet implemented")
+                Log.d(TAG, "message : ${t.message}")
             }
 
         })
@@ -126,6 +131,34 @@ class DetailViewModel : ViewModel() {
             }
 
         })
+    }
+
+    fun getFavoritedMovieById(id: Int?) = movieRepository.getFavoriteMovieById(id!!)
+
+    fun insertFavoritedMovie(movie: FavoriteMovieEntity?) {
+        viewModelScope.launch {
+            movieRepository.insertFavoriteMovie(movie!!)
+        }
+    }
+
+    fun deleteFavoritedMovie(movie: FavoriteMovieEntity?) {
+        viewModelScope.launch {
+            movieRepository.deleteFavoriteMovie(movie!!)
+        }
+    }
+
+    fun getFavoritedTvById(id: Int?) = movieRepository.getFavoriteTvById(id!!)
+
+    fun insertFavoritedTv(tv: FavoriteTvEntity?) {
+        viewModelScope.launch {
+            movieRepository.insertFavoriteTvshow(tv!!)
+        }
+    }
+
+    fun deleteFavoritedTv(tv: FavoriteTvEntity?) {
+        viewModelScope.launch {
+            movieRepository.deleteFavoriteTvshow(tv!!)
+        }
     }
 
 }

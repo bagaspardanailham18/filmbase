@@ -1,20 +1,19 @@
 package com.bagas.project.filmbase.ui.home.tvshow
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bagas.project.filmbase.BuildConfig
+import com.bagas.project.filmbase.data.local.TopRatedTvEntity
 import com.bagas.project.filmbase.data.responses.TopRatedTvshowItem
 import com.bagas.project.filmbase.databinding.ItemRowTopRatedBinding
+import com.bagas.project.filmbase.ui.DetailActivity
 import com.bumptech.glide.Glide
 
-class ListTopRatedTvshowAdapter(private val listTopRatedTvshow: List<TopRatedTvshowItem?>): RecyclerView.Adapter<ListTopRatedTvshowAdapter.ListTopRatedTvshowVH>() {
-
-    private lateinit var onItemClickCallback: OnItemClickCallback
-
-    fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback) {
-        this.onItemClickCallback = onItemClickCallback
-    }
+class ListTopRatedTvshowAdapter: ListAdapter<TopRatedTvEntity, ListTopRatedTvshowAdapter.ListTopRatedTvshowVH>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -28,24 +27,47 @@ class ListTopRatedTvshowAdapter(private val listTopRatedTvshow: List<TopRatedTvs
         holder: ListTopRatedTvshowAdapter.ListTopRatedTvshowVH,
         position: Int
     ) {
-        val item = listTopRatedTvshow[position]
-
-        holder.title.text = item?.name.toString().trim()
-        holder.rating.text = item?.voteAverage.toString().trim()
-
-        Glide.with(holder.itemView.context)
-            .load(BuildConfig.IMAGE_URL + item?.posterPath)
-            .into(holder.poster)
-
-        holder.itemView.setOnClickListener { onItemClickCallback.onItemClicked(listTopRatedTvshow[holder.adapterPosition]) }
+        val item = getItem(position)
+        holder.bind(item)
     }
 
-    override fun getItemCount(): Int = listTopRatedTvshow.size
+    inner class ListTopRatedTvshowVH(private val binding: ItemRowTopRatedBinding): RecyclerView.ViewHolder(binding.root) {
+        fun bind(topRatedTvEntity: TopRatedTvEntity) {
+            with(binding) {
+                tvItemTitle.text = topRatedTvEntity.name.toString().trim()
+                tvItemRating.text = topRatedTvEntity.voteAverage.toString().trim()
 
-    inner class ListTopRatedTvshowVH(binding: ItemRowTopRatedBinding): RecyclerView.ViewHolder(binding.root) {
-        val title = binding.tvItemTitle
-        val rating = binding.tvItemRating
-        val poster = binding.tvItemImg
+                Glide.with(itemView.context)
+                    .load(BuildConfig.IMAGE_URL + topRatedTvEntity.posterPath)
+                    .into(tvItemImg)
+
+                itemView.setOnClickListener {
+                    val intent = Intent(itemView.context, DetailActivity::class.java)
+                    intent.putExtra(DetailActivity.EXTRA_TV_DETAIL, topRatedTvEntity.id)
+                    itemView.context.startActivity(intent)
+                }
+            }
+        }
+    }
+
+    companion object {
+        val DIFF_CALLBACK: DiffUtil.ItemCallback<TopRatedTvEntity> =
+            object : DiffUtil.ItemCallback<TopRatedTvEntity>() {
+                override fun areItemsTheSame(
+                    oldItem: TopRatedTvEntity,
+                    newItem: TopRatedTvEntity
+                ): Boolean {
+                    return oldItem.name == newItem.name
+                }
+
+                override fun areContentsTheSame(
+                    oldItem: TopRatedTvEntity,
+                    newItem: TopRatedTvEntity
+                ): Boolean {
+                    return oldItem == newItem
+                }
+
+            }
     }
 
     interface OnItemClickCallback {

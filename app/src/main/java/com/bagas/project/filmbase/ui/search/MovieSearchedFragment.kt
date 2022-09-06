@@ -6,23 +6,25 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import com.bagas.project.filmbase.data.Result
 import com.bagas.project.filmbase.data.responses.MovieSearchItem
-import com.bagas.project.filmbase.data.responses.TrendingMoviesItem
-import com.bagas.project.filmbase.data.responses.TrendingTvshowItem
 import com.bagas.project.filmbase.databinding.FragmentMovieSearchedBinding
 import com.bagas.project.filmbase.ui.DetailActivity
 import com.bagas.project.filmbase.ui.DetailActivity.Companion.EXTRA_MOVIE_DETAIL
-import com.bagas.project.filmbase.ui.DetailActivity.Companion.EXTRA_TV_DETAIL
+import com.bagas.project.filmbase.ui.ViewModelFactory
 
 class MovieSearchedFragment : Fragment() {
 
     private var _binding: FragmentMovieSearchedBinding? = null
     private val binding get() = _binding
 
-    private val searchViewModel by viewModels<SearchViewModel>()
+//    private val searchViewModel by viewModels<SearchViewModel>()
+
+    private val trendingMovieAdapter = ListTrendingMovieAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,16 +38,46 @@ class MovieSearchedFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        searchViewModel.listTrendingMovies.observe(viewLifecycleOwner) { listData ->
-            setTrendingMoviesData(listData)
+        val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity())
+        val viewModel: SearchViewModel by viewModels {
+            factory
         }
 
-        searchViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            showProgressBar(isLoading)
-        }
+//        searchViewModel.listTrendingMovies.observe(viewLifecycleOwner) { listData ->
+//            setTrendingMoviesData(listData)
+//        }
+//
+//        searchViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+//            showProgressBar(isLoading)
+//        }
 
-        showTrendingRv()
         showNotFound(false)
+
+        viewModel.getTrendingMovies().observe(viewLifecycleOwner) { result ->
+            if (result != null) {
+                when (result) {
+                    is Result.Loading -> {
+                        binding?.progressBar?.visibility = View.VISIBLE
+                    }
+                    is Result.Success -> {
+                        binding?.progressBar?.visibility = View.GONE
+                        binding?.trendingMovies?.visibility = View.VISIBLE
+                        binding?.rvTrending?.visibility = View.VISIBLE
+                        val trendingMoviesData = result.data
+                        trendingMovieAdapter.submitList(trendingMoviesData)
+                        showTrendingRv()
+                    }
+                    is Result.Error -> {
+                        binding?.progressBar?.visibility = View.GONE
+                        Toast.makeText(
+                            context,
+                            "Terjadi kesalahan" + result.error,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+        }
 
         binding?.searchview?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -54,16 +86,17 @@ class MovieSearchedFragment : Fragment() {
 
             override fun onQueryTextChange(query: String?): Boolean {
                 if (query!!.isNotEmpty() || query != "") {
-                    binding?.trendingMovies?.visibility = View.INVISIBLE
+                    binding?.trendingMovies?.visibility = View.GONE
+                    binding?.rvTrending?.visibility = View.GONE
                     binding?.rvMovieSearched?.visibility = View.VISIBLE
-                    searchViewModel.getMovieSearch(query)
-                    searchViewModel.listMovieSearch.observe(viewLifecycleOwner) { result ->
+                    viewModel.getMovieSearch(query)
+                    viewModel.listMovieSearch.observe(viewLifecycleOwner) { result ->
                         if (result.size > 0) {
                             setMovieSearchData(result)
                             showMovieSearchedRv()
                             showNotFound(false)
                         } else {
-                            binding?.rvMovieSearched?.visibility = View.INVISIBLE
+                            binding?.rvMovieSearched?.visibility = View.GONE
                             showNotFound(true)
                         }
                     }
@@ -71,7 +104,8 @@ class MovieSearchedFragment : Fragment() {
                 } else {
                     showNotFound(false)
                     binding?.trendingMovies?.visibility = View.VISIBLE
-                    binding?.rvMovieSearched?.visibility = View.INVISIBLE
+                    binding?.rvTrending?.visibility = View.VISIBLE
+                    binding?.rvMovieSearched?.visibility = View.GONE
                     showTrendingRv()
                     return true
                 }
@@ -80,32 +114,33 @@ class MovieSearchedFragment : Fragment() {
         })
     }
 
-    private fun setTrendingMoviesData(data: List<TrendingMoviesItem?>) {
-        val adapter = ListTrendingAdapter(data, emptyList())
-        binding?.rvTrending?.adapter = adapter
-
-        adapter.setOnItemClickCallback(object : ListTrendingAdapter.OnItemClickCallback{
-            override fun onItemClicked(
-                dataTrendingMovie: TrendingMoviesItem?,
-                dataTrendingTv: TrendingTvshowItem?
-            ) {
-                if (dataTrendingMovie != null) {
-                    val intent = Intent(requireActivity(), DetailActivity::class.java)
-                    intent.putExtra(EXTRA_MOVIE_DETAIL, dataTrendingMovie.id)
-                    startActivity(intent)
-                } else {
-                    val intent = Intent(requireActivity(), DetailActivity::class.java)
-                    intent.putExtra(EXTRA_TV_DETAIL, dataTrendingTv?.id)
-                    startActivity(intent)
-                }
-            }
-
-        })
-    }
+//    private fun setTrendingMoviesData(data: List<TrendingMoviesItem?>) {
+//        val adapter = ListTrendingMovieAdapter(data, emptyList())
+//        binding?.rvTrending?.adapter = adapter
+//
+//        adapter.setOnItemClickCallback(object : ListTrendingMovieAdapter.OnItemClickCallback{
+//            override fun onItemClicked(
+//                dataTrendingMovie: TrendingMoviesItem?,
+//                dataTrendingTv: TrendingTvshowItem?
+//            ) {
+//                if (dataTrendingMovie != null) {
+//                    val intent = Intent(requireActivity(), DetailActivity::class.java)
+//                    intent.putExtra(EXTRA_MOVIE_DETAIL, dataTrendingMovie.id)
+//                    startActivity(intent)
+//                } else {
+//                    val intent = Intent(requireActivity(), DetailActivity::class.java)
+//                    intent.putExtra(EXTRA_TV_DETAIL, dataTrendingTv?.id)
+//                    startActivity(intent)
+//                }
+//            }
+//
+//        })
+//    }
 
     private fun showTrendingRv() {
-        binding?.rvTrending?.layoutManager = GridLayoutManager(requireActivity(), 3)
+        binding?.rvTrending?.adapter = trendingMovieAdapter
         binding?.rvTrending?.setHasFixedSize(true)
+        binding?.rvTrending?.layoutManager = GridLayoutManager(requireActivity(), 3)
     }
 
     private fun setMovieSearchData(data: List<MovieSearchItem?>) {
@@ -131,7 +166,7 @@ class MovieSearchedFragment : Fragment() {
         if (state) {
             binding?.lottieAnimation?.visibility = View.VISIBLE
         } else {
-            binding?.lottieAnimation?.visibility = View.INVISIBLE
+            binding?.lottieAnimation?.visibility = View.GONE
         }
     }
 
@@ -143,4 +178,8 @@ class MovieSearchedFragment : Fragment() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        binding?.searchview?.setQuery("", false)
+    }
 }

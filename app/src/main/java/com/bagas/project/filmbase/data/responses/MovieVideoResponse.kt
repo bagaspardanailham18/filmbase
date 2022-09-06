@@ -19,9 +19,6 @@ data class MovieVideoItem(
 	@field:SerializedName("size")
 	val size: Int? = null,
 
-	@field:SerializedName("iso_3166_1")
-	val iso31661: String? = null,
-
 	@field:SerializedName("name")
 	val name: String? = null,
 
@@ -36,9 +33,6 @@ data class MovieVideoItem(
 
 	@field:SerializedName("published_at")
 	val publishedAt: String? = null,
-
-	@field:SerializedName("iso_639_1")
-	val iso6391: String? = null,
 
 	@field:SerializedName("key")
 	val key: String? = null

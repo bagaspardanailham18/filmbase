@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.bagas.project.filmbase.R
-import com.bagas.project.filmbase.SectionsPagerAdapter
+import com.bagas.project.filmbase.ui.SectionsPagerAdapter
 import com.bagas.project.filmbase.databinding.FragmentHomeBinding
 import com.dicoding.bfaa.mytablayout.animation.ZoomOutPageTransformer
 import com.google.android.material.tabs.TabLayoutMediator
@@ -55,13 +55,6 @@ class HomeFragment : Fragment() {
             val textView = LayoutInflater.from(requireContext()).inflate(R.layout.tab_title, null) as TextView
             binding.tabLayout.getTabAt(i)?.customView = textView
         }
-    }
-
-    @SuppressLint("InflateParams")
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-
     }
 
     override fun onDestroyView() {

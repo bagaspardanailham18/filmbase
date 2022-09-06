@@ -22,8 +22,6 @@ class SearchFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    private val searchViewModel by viewModels<SearchViewModel>()
-
     companion object {
         val TAB_TITLES = intArrayOf(
             R.string.tab_text_movie,
@@ -43,7 +41,6 @@ class SearchFragment : Fragment() {
         return root
     }
 
-    @SuppressLint("InflateParams")
     private fun setupTabLayoutWithViewPager() {
         binding.viewPager.adapter = SearchSectionPagerAdapter(this)
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
@@ -54,13 +51,6 @@ class SearchFragment : Fragment() {
             val textView = LayoutInflater.from(requireContext()).inflate(R.layout.tab_title, null) as TextView
             binding.tabLayout.getTabAt(i)?.customView = textView
         }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-
-
     }
 
 

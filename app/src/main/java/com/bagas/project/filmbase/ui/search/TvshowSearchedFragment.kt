@@ -6,22 +6,26 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import com.bagas.project.filmbase.R
+import com.bagas.project.filmbase.data.Result
 import com.bagas.project.filmbase.data.responses.TrendingMoviesItem
 import com.bagas.project.filmbase.data.responses.TrendingTvshowItem
 import com.bagas.project.filmbase.data.responses.TvshowSearchItem
 import com.bagas.project.filmbase.databinding.FragmentTvshowSearchedBinding
 import com.bagas.project.filmbase.ui.DetailActivity
+import com.bagas.project.filmbase.ui.ViewModelFactory
 
 class TvshowSearchedFragment : Fragment() {
 
     private var _binding: FragmentTvshowSearchedBinding? = null
     private val binding get() = _binding
 
-    private val searchViewModel by viewModels<SearchViewModel>()
+//    private val searchViewModel by viewModels<SearchViewModel>()
+
+    private val trendingTvAdapter = ListTrendingTvAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,16 +39,48 @@ class TvshowSearchedFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        searchViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            showProgressBar(isLoading)
+        val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity())
+        val viewModel: SearchViewModel by viewModels {
+            factory
         }
 
-        searchViewModel.listTrendingTvshow.observe(viewLifecycleOwner) { listData ->
-            setTrendingTvshowData(listData)
-        }
+//        searchViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+//            showProgressBar(isLoading)
+//        }
+//
+//        searchViewModel.listTrendingTvshow.observe(viewLifecycleOwner) { listData ->
+//            setTrendingTvshowData(listData)
+//        }
 
-        showTrendingRv()
+
         showNotFound(false)
+
+        viewModel.getTrendingTvshow().observe(viewLifecycleOwner) { result ->
+            if (result != null) {
+                when (result) {
+                    is Result.Loading -> {
+                        binding?.progressBar?.visibility = View.VISIBLE
+                    }
+                    is Result.Success -> {
+                        binding?.progressBar?.visibility = View.GONE
+                        binding?.trendingTvshow?.visibility = View.VISIBLE
+                        binding?.rvTrending?.visibility = View.VISIBLE
+                        val trendingTvData = result.data
+                        trendingTvAdapter.submitList(trendingTvData)
+                        showTrendingRv()
+                    }
+                    is Result.Error -> {
+                        binding?.progressBar?.visibility = View.GONE
+                        Toast.makeText(
+                            context,
+                            "Terjadi kesalahan" + result.error,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+        }
+
 
         binding?.searchview?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -53,16 +89,17 @@ class TvshowSearchedFragment : Fragment() {
 
             override fun onQueryTextChange(query: String?): Boolean {
                 if (query!!.isNotEmpty() || query != "") {
-                    binding?.trendingTvshow?.visibility = View.INVISIBLE
+                    binding?.trendingTvshow?.visibility = View.GONE
+                    binding?.rvTrending?.visibility = View.GONE
                     binding?.rvTvshowSearched?.visibility = View.VISIBLE
-                    searchViewModel.getTvshowSearch(query)
-                    searchViewModel.listTvshowSearch.observe(viewLifecycleOwner) { result ->
+                    viewModel.getTvshowSearch(query)
+                    viewModel.listTvshowSearch.observe(viewLifecycleOwner) { result ->
                         if (result.size > 0) {
                             setTvshowSearchData(result)
                             showTvshowSearchedRv()
                             showNotFound(false)
                         } else {
-                            binding?.rvTvshowSearched?.visibility = View.INVISIBLE
+                            binding?.rvTvshowSearched?.visibility = View.GONE
                             showNotFound(true)
                         }
                     }
@@ -70,7 +107,8 @@ class TvshowSearchedFragment : Fragment() {
                 } else {
                     showNotFound(false)
                     binding?.trendingTvshow?.visibility = View.VISIBLE
-                    binding?.rvTvshowSearched?.visibility = View.INVISIBLE
+                    binding?.rvTrending?.visibility = View.VISIBLE
+                    binding?.rvTvshowSearched?.visibility = View.GONE
                     showTrendingRv()
                     return true
                 }
@@ -79,32 +117,33 @@ class TvshowSearchedFragment : Fragment() {
         })
     }
 
-    private fun setTrendingTvshowData(data: List<TrendingTvshowItem?>) {
-        val adapter = ListTrendingAdapter(emptyList(), data)
-        binding?.rvTrending?.adapter = adapter
-
-        adapter.setOnItemClickCallback(object : ListTrendingAdapter.OnItemClickCallback{
-            override fun onItemClicked(
-                dataTrendingMovie: TrendingMoviesItem?,
-                dataTrendingTv: TrendingTvshowItem?
-            ) {
-                if (dataTrendingMovie != null) {
-                    val intent = Intent(requireActivity(), DetailActivity::class.java)
-                    intent.putExtra(DetailActivity.EXTRA_MOVIE_DETAIL, dataTrendingMovie.id)
-                    startActivity(intent)
-                } else {
-                    val intent = Intent(requireActivity(), DetailActivity::class.java)
-                    intent.putExtra(DetailActivity.EXTRA_TV_DETAIL, dataTrendingTv?.id)
-                    startActivity(intent)
-                }
-            }
-
-        })
-    }
+//    private fun setTrendingTvshowData(data: List<TrendingTvshowItem?>) {
+//        val adapter = ListTrendingMovieAdapter(emptyList(), data)
+//        binding?.rvTrending?.adapter = adapter
+//
+//        adapter.setOnItemClickCallback(object : ListTrendingMovieAdapter.OnItemClickCallback{
+//            override fun onItemClicked(
+//                dataTrendingMovie: TrendingMoviesItem?,
+//                dataTrendingTv: TrendingTvshowItem?
+//            ) {
+//                if (dataTrendingMovie != null) {
+//                    val intent = Intent(requireActivity(), DetailActivity::class.java)
+//                    intent.putExtra(DetailActivity.EXTRA_MOVIE_DETAIL, dataTrendingMovie.id)
+//                    startActivity(intent)
+//                } else {
+//                    val intent = Intent(requireActivity(), DetailActivity::class.java)
+//                    intent.putExtra(DetailActivity.EXTRA_TV_DETAIL, dataTrendingTv?.id)
+//                    startActivity(intent)
+//                }
+//            }
+//
+//        })
+//    }
 
     private fun showTrendingRv() {
-        binding?.rvTrending?.layoutManager = GridLayoutManager(requireActivity(), 3)
+        binding?.rvTrending?.adapter = trendingTvAdapter
         binding?.rvTrending?.setHasFixedSize(true)
+        binding?.rvTrending?.layoutManager = GridLayoutManager(requireActivity(), 3)
     }
 
     private fun setTvshowSearchData(data: List<TvshowSearchItem?>) {
@@ -130,7 +169,7 @@ class TvshowSearchedFragment : Fragment() {
         if (state) {
             binding?.lottieAnimation?.visibility = View.VISIBLE
         } else {
-            binding?.lottieAnimation?.visibility = View.INVISIBLE
+            binding?.lottieAnimation?.visibility = View.GONE
         }
     }
 
@@ -140,5 +179,10 @@ class TvshowSearchedFragment : Fragment() {
         } else {
             binding?.progressBar?.visibility = View.GONE
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        binding?.searchview?.setQuery("", false)
     }
 }

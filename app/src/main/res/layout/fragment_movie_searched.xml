@@ -29,7 +29,7 @@
         android:layout_marginEnd="4dp"
         android:orientation="vertical"
         android:paddingBottom="120dp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/searchview">
@@ -46,6 +46,7 @@
             android:id="@+id/rv_trending"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:visibility="gone"
             tools:listitem="@layout/item_row_top_rated" />
 
     </LinearLayout>

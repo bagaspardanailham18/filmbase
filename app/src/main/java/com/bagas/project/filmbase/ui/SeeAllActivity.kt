@@ -34,20 +34,20 @@ class SeeAllActivity : AppCompatActivity() {
             onBackPressed()
         }
 
-        if (type == UPCOMING_MOVIES) {
-            movieViewModel.totapPages.observe(this) { totalPages ->
-                movieViewModel.getAllUpcomingMovies(totalPages)
-                movieViewModel.listAllUpcomingMovies.observe(this) { listAllUpcomingMovies ->
-                    setAllUpcomingMoviesData(listAllUpcomingMovies)
-                }
-            }
-
-            movieViewModel.isLoading.observe(this) { isLoading ->
-                showProgressBar(isLoading)
-            }
-        } else {
-            return
-        }
+//        if (type == UPCOMING_MOVIES) {
+//            movieViewModel.totapPages.observe(this) { totalPages ->
+//                movieViewModel.getAllUpcomingMovies(totalPages)
+//                movieViewModel.listAllUpcomingMovies.observe(this) { listAllUpcomingMovies ->
+//                    setAllUpcomingMoviesData(listAllUpcomingMovies)
+//                }
+//            }
+//
+//            movieViewModel.isLoading.observe(this) { isLoading ->
+//                showProgressBar(isLoading)
+//            }
+//        } else {
+//            return
+//        }
 
         showAllUpcomingMoviesRv()
 

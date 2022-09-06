@@ -1,4 +1,4 @@
-package com.bagas.project.filmbase
+package com.bagas.project.filmbase.ui
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter

@@ -8,17 +8,23 @@ import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bagas.project.filmbase.BuildConfig
+import com.bagas.project.filmbase.data.local.FavoriteMovieEntity
+import com.bagas.project.filmbase.data.local.FavoriteTvEntity
 import com.bagas.project.filmbase.data.responses.MovieProductionCompaniesItem
 import com.bagas.project.filmbase.data.responses.TvProductionCompaniesItem
 import com.bagas.project.filmbase.databinding.ActivityDetailBinding
 import com.bumptech.glide.Glide
-import retrofit2.Callback
 
 class DetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailBinding
 
-    private val detailViewModel by viewModels<DetailViewModel>()
+//    private val detailViewModel by viewModels<DetailViewModel>()
+
+    private val factory: ViewModelFactory = ViewModelFactory.getInstance(this)
+    private val detailViewModel: DetailViewModel by viewModels {
+        factory
+    }
 
     companion object {
         const val EXTRA_MOVIE_DETAIL = "extra_movie_detail"
@@ -45,25 +51,46 @@ class DetailActivity : AppCompatActivity() {
             populateTvDetail(tvData)
         }
 
+//        binding.btnToggleFavorite.setOnClickListener {
+//            if (isChecked) {
+//                detailViewModel.deleteMovie(movie as MovieEntity)
+//            } else {
+//                detailViewModel.insertMovie(movie as MovieEntity)
+//            }
+//
+//        }
     }
 
     private fun populateMovieDetail(data: Int) {
         detailViewModel.getMovieDetail(data)
         detailViewModel.movieDetail.observe(this) { data ->
             detailViewModel.getMovieVideos(data?.id)
+//            setFavoriteState()
 
             binding.tvDetailTitle.text = data?.title
             binding.tvDetailDate.text = data?.releaseDate
-            binding.tvDetailGenre.text = data?.genres?.get(0)?.name.toString()
-            binding.tvDetailFavorites.text = data?.voteAverage?.toString()?.trim()
-            binding.tvDetailOverview.text = data?.overview
+
+            if (data?.genres!!.isNotEmpty()) {
+                binding.tvDetailGenre.text = "-"
+            } else {
+                binding.tvDetailGenre.text = data.genres.get(0)?.name.toString()
+            }
+
+            binding.tvDetailFavorites.text = data.voteAverage?.toString()?.trim()
+
+            if (data.overview.equals("")) {
+                binding.tvDetailOverview.text = "no overview"
+            } else {
+                binding.tvDetailOverview.text = data.overview
+            }
+
 
             Glide.with(this)
-                .load(BuildConfig.IMAGE_URL + data?.backdropPath)
+                .load(BuildConfig.IMAGE_URL + data.backdropPath)
                 .into(binding.backdrop)
 
             Glide.with(this)
-                .load(BuildConfig.IMAGE_URL + data?.posterPath)
+                .load(BuildConfig.IMAGE_URL + data.posterPath)
                 .into(binding.tvDetailPoster)
 
             detailViewModel.movieVideos.observe(this) { video ->
@@ -73,8 +100,27 @@ class DetailActivity : AppCompatActivity() {
                 }
             }
 
+            detailViewModel.getFavoritedMovieById(data.id).observe(this) { favoritedData ->
+                if (favoritedData != null) {
+                    setFavoriteState(true)
+                    binding.btnToggleFavorite.setOnClickListener { detailViewModel.deleteFavoritedMovie(favoritedData) }
+                } else {
+                    setFavoriteState(false)
+                    val movie = FavoriteMovieEntity(
+                        data.id,
+                        data.title,
+                        data.overview,
+                        data.releaseDate,
+                        data.voteAverage,
+                        data.posterPath.toString(),
+                        data.backdropPath
+                    )
+                    binding.btnToggleFavorite.setOnClickListener { detailViewModel.insertFavoritedMovie(movie) }
+                }
+            }
+
             populateMovieVideos()
-            populateMovieProduction(data?.productionCompanies)
+            populateMovieProduction(data.productionCompanies)
         }
     }
 
@@ -131,6 +177,25 @@ class DetailActivity : AppCompatActivity() {
                 }
             }
 
+            detailViewModel.getFavoritedTvById(data.id).observe(this) { favoritedData ->
+                if (favoritedData != null) {
+                    setFavoriteState(true)
+                    binding.btnToggleFavorite.setOnClickListener { detailViewModel.deleteFavoritedTv(favoritedData) }
+                } else {
+                    setFavoriteState(false)
+                    val tv = FavoriteTvEntity(
+                        data.id!!,
+                        data.name,
+                        data.overview,
+                        data.firstAirDate,
+                        data.voteAverage,
+                        data.posterPath,
+                        data.backdropPath
+                    )
+                    binding.btnToggleFavorite.setOnClickListener { detailViewModel.insertFavoritedTv(tv) }
+                }
+            }
+
             populateTvVideos()
             populateTvProduction(data.productionCompanies)
         }
@@ -155,6 +220,15 @@ class DetailActivity : AppCompatActivity() {
     private fun setupStatusBar() {
         with(window) {
             setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+        }
+    }
+
+    private fun setFavoriteState(state: Boolean) {
+        val fab = binding.btnToggleFavorite
+        if (state) {
+            fab.isChecked = true
+        } else {
+            fab.isChecked = false
         }
     }
 }

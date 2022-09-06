@@ -8,36 +8,38 @@ import retrofit2.http.Query
 
 interface ApiService {
 
+    // Add suspend and remove call<> for kotlin coroutines support
+
     @GET("movie/upcoming")
-    fun getUpcomingMovies(
+    suspend fun getUpcomingMovies(
         @Query("api_key") apiKey: String,
         @Query("page") page: Int
-    ) : Call<UpcomingMoviesResponse>
+    ) : UpcomingMoviesResponse
 
     @GET("movie/top_rated")
-    fun getTopRatedMovies(
+    suspend fun getTopRatedMovies(
         @Query("api_key") apiKey: String
-    ) : Call<TopRatedMoviesResponse>
+    ) : TopRatedMoviesResponse
 
     @GET("tv/airing_today")
-    fun getAiringTodayTvshow(
+    suspend fun getAiringTodayTvshow(
         @Query("api_key") apiKey: String
-    ) : Call<AiringTodayTvshowResponse>
+    ) : AiringTodayTvshowResponse
 
     @GET("tv/top_rated")
-    fun getTopRatedTvshow(
+    suspend fun getTopRatedTvshow(
         @Query("api_key") apiKey: String
-    ) : Call<TopRatedTvshowResponse>
+    ) : TopRatedTvshowResponse
 
     @GET("trending/movie/day")
-    fun getTrendingMovies(
+    suspend fun getTrendingMovies(
         @Query("api_key") apiKey: String
-    ) : Call<TrendingMoviesResponse>
+    ) : TrendingMoviesResponse
 
     @GET("trending/tv/day")
-    fun getTrendingTvshow(
+    suspend fun getTrendingTvshow(
         @Query("api_key") apiKey: String
-    ) : Call<TrendingTvshowResponse>
+    ) : TrendingTvshowResponse
 
     @GET("search/movie")
     fun getMovieSearch(
@@ -52,10 +54,10 @@ interface ApiService {
     ) : Call<TvshowSearchResponse>
 
     @GET("search/multi")
-    fun multiSearch(
+    suspend fun multiSearch(
         @Query("api_key") apiKey: String,
         @Query("query") query: String
-    ) : Call<MultiSearchResponse>
+    ) : MultiSearchResponse
 
     @GET("movie/{movie_id}")
     fun getMovieDetail(

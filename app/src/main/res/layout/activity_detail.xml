@@ -65,17 +65,30 @@
                 app:layout_constraintStart_toStartOf="@+id/tv_detail_poster"
                 app:layout_constraintTop_toBottomOf="@+id/tv_detail_poster" />
 
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginEnd="16dp"
+            <LinearLayout
+                android:id="@+id/toggle_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:background="@drawable/bg_circle_yellow"
+                android:orientation="vertical"
                 android:padding="10dp"
-                android:src="@drawable/ic_favorite_border"
+                android:layout_marginEnd="16dp"
                 app:layout_constraintBottom_toBottomOf="@+id/backdrop"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/backdrop" />
+                app:layout_constraintTop_toBottomOf="@+id/backdrop" >
+
+                <ToggleButton
+                    android:id="@+id/btn_toggle_favorite"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:background="@drawable/toggle_favorite"
+                    android:src="@drawable/ic_favorite_border"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:textOff=""
+                    android:textOn="" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tv_detail_title"
@@ -90,10 +103,10 @@
                 android:text="Movie Title"
                 android:textColor="@color/grey_dark"
                 android:textSize="18sp"
-                app:layout_constraintEnd_toEndOf="@+id/imageView2"
+                app:layout_constraintEnd_toEndOf="@+id/toggle_layout"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/tv_detail_poster"
-                app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+                app:layout_constraintTop_toBottomOf="@+id/toggle_layout" />
 
             <TextView
                 android:id="@+id/tv_detail_date"

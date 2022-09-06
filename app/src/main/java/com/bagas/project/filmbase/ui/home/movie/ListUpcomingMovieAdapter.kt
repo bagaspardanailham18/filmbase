@@ -1,21 +1,20 @@
 package com.bagas.project.filmbase.ui.home.movie
 
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bagas.project.filmbase.BuildConfig
+import com.bagas.project.filmbase.data.local.UpcomingMovieEntity
 import com.bagas.project.filmbase.data.responses.UpcomingMoviesItem
 import com.bagas.project.filmbase.databinding.ItemRowUpcomingBinding
+import com.bagas.project.filmbase.ui.DetailActivity
 import com.bumptech.glide.Glide
 
-class ListUpcomingMovieAdapter(private val listUpcomingMovies: List<UpcomingMoviesItem?>): RecyclerView.Adapter<ListUpcomingMovieAdapter.ListUpcomingMovieVH>() {
-
-    private lateinit var onItemClickCallback: OnItemClickCallback
-
-    fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback) {
-        this.onItemClickCallback = onItemClickCallback
-    }
+class ListUpcomingMovieAdapter: ListAdapter<UpcomingMovieEntity, ListUpcomingMovieAdapter.ListUpcomingMovieVH>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -29,25 +28,48 @@ class ListUpcomingMovieAdapter(private val listUpcomingMovies: List<UpcomingMovi
         holder: ListUpcomingMovieVH,
         position: Int
     ) {
-        val item = listUpcomingMovies[position]
-
-        Log.d("Data", item.toString())
-
-        holder.title.text = item?.title.toString().trim()
-        holder.rating.text = item?.voteAverage.toString().trim()
-        Glide.with(holder.itemView.context)
-            .load(BuildConfig.IMAGE_URL + item?.posterPath)
-            .into(holder.poster)
-
-        holder.itemView.setOnClickListener { onItemClickCallback.onItemClicked(listUpcomingMovies[holder.adapterPosition]!!) }
+        val item = getItem(position)
+        if (item != null) {
+            holder.bind(item)
+        }
     }
 
-    override fun getItemCount(): Int = listUpcomingMovies.size
+    inner class ListUpcomingMovieVH(private val binding: ItemRowUpcomingBinding): RecyclerView.ViewHolder(binding.root) {
+        fun bind(upcomingMovie: UpcomingMovieEntity) {
+            with(binding) {
+                tvItemTitle.text = upcomingMovie.title.toString().trim()
+                tvItemRating.text = upcomingMovie.voteAverage.toString().trim()
+                Glide.with(itemView.context)
+                    .load(BuildConfig.IMAGE_URL + upcomingMovie.posterPath)
+                    .into(tvItemImg)
 
-    inner class ListUpcomingMovieVH(binding: ItemRowUpcomingBinding): RecyclerView.ViewHolder(binding.root) {
-        var title = binding.tvItemTitle
-        var rating = binding.tvItemRating
-        var poster = binding.tvItemImg
+                itemView.setOnClickListener {
+                    val intent = Intent(itemView.context, DetailActivity::class.java)
+                    intent.putExtra(DetailActivity.EXTRA_MOVIE_DETAIL, upcomingMovie.id)
+                    itemView.context.startActivity(intent)
+                }
+            }
+        }
+    }
+
+    companion object {
+        val DIFF_CALLBACK: DiffUtil.ItemCallback<UpcomingMovieEntity> =
+            object : DiffUtil.ItemCallback<UpcomingMovieEntity>() {
+                override fun areItemsTheSame(
+                    oldItem: UpcomingMovieEntity,
+                    newItem: UpcomingMovieEntity
+                ): Boolean {
+                    return oldItem.title == newItem.title
+                }
+
+                override fun areContentsTheSame(
+                    oldItem: UpcomingMovieEntity,
+                    newItem: UpcomingMovieEntity
+                ): Boolean {
+                    return oldItem == newItem
+                }
+
+            }
     }
 
     interface OnItemClickCallback {

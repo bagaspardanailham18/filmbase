@@ -14,6 +14,7 @@
         <entry key="..\:/Users/ibaga/AndroidStudioProjects/Project/Filmbase/app/src/main/res/drawable/ic_arrow_circle.xml" value="0.1315" />
         <entry key="..\:/Users/ibaga/AndroidStudioProjects/Project/Filmbase/app/src/main/res/drawable/ic_arrow_dark_grey.xml" value="0.1315" />
         <entry key="..\:/Users/ibaga/AndroidStudioProjects/Project/Filmbase/app/src/main/res/drawable/ic_arrow_right_white.xml" value="0.1315" />
+        <entry key="..\:/Users/ibaga/AndroidStudioProjects/Project/Filmbase/app/src/main/res/drawable/ic_favorite_black_24.xml" value="0.1315" />
         <entry key="..\:/Users/ibaga/AndroidStudioProjects/Project/Filmbase/app/src/main/res/drawable/tab_background.xml" value="0.1315" />
         <entry key="..\:/Users/ibaga/AndroidStudioProjects/Project/Filmbase/app/src/main/res/drawable/tab_background_selected.xml" value="0.1315" />
         <entry key="..\:/Users/ibaga/AndroidStudioProjects/Project/Filmbase/app/src/main/res/drawable/tab_background_selector.xml" value="0.1315" />
@@ -22,11 +23,16 @@
         <entry key="..\:/Users/ibaga/AndroidStudioProjects/Project/Filmbase/app/src/main/res/drawable/tab_text_selector.xml" value="0.1315" />
         <entry key="..\:/Users/ibaga/AndroidStudioProjects/Project/Filmbase/app/src/main/res/drawable/tab_title.xml" value="0.1315" />
         <entry key="..\:/Users/ibaga/AndroidStudioProjects/Project/Filmbase/app/src/main/res/drawable/tab_unselected_background.xml" value="0.15" />
+        <entry key="..\:/Users/ibaga/AndroidStudioProjects/Project/Filmbase/app/src/main/res/drawable/toggle_favorite.xml" value="0.1315" />
         <entry key="..\:/Users/ibaga/AndroidStudioProjects/Project/Filmbase/app/src/main/res/drawable/white_gradient.xml" value="0.1315" />
         <entry key="..\:/Users/ibaga/AndroidStudioProjects/Project/Filmbase/app/src/main/res/layout/activity_detail.xml" value="0.22" />
         <entry key="..\:/Users/ibaga/AndroidStudioProjects/Project/Filmbase/app/src/main/res/layout/activity_main.xml" value="0.22" />
         <entry key="..\:/Users/ibaga/AndroidStudioProjects/Project/Filmbase/app/src/main/res/layout/activity_see_all.xml" value="0.1841880341880342" />
+        <entry key="..\:/Users/ibaga/AndroidStudioProjects/Project/Filmbase/app/src/main/res/layout/activity_splash_screen.xml" value="0.1841880341880342" />
         <entry key="..\:/Users/ibaga/AndroidStudioProjects/Project/Filmbase/app/src/main/res/layout/fragment_dashboard.xml" value="0.22447916666666667" />
+        <entry key="..\:/Users/ibaga/AndroidStudioProjects/Project/Filmbase/app/src/main/res/layout/fragment_favorite.xml" value="0.1841880341880342" />
+        <entry key="..\:/Users/ibaga/AndroidStudioProjects/Project/Filmbase/app/src/main/res/layout/fragment_favorite_movies.xml" value="0.1841880341880342" />
+        <entry key="..\:/Users/ibaga/AndroidStudioProjects/Project/Filmbase/app/src/main/res/layout/fragment_favorite_tvshows.xml" value="0.1841880341880342" />
         <entry key="..\:/Users/ibaga/AndroidStudioProjects/Project/Filmbase/app/src/main/res/layout/fragment_home.xml" value="0.2" />
         <entry key="..\:/Users/ibaga/AndroidStudioProjects/Project/Filmbase/app/src/main/res/layout/fragment_movie.xml" value="0.25" />
         <entry key="..\:/Users/ibaga/AndroidStudioProjects/Project/Filmbase/app/src/main/res/layout/fragment_movie_searched.xml" value="0.1841880341880342" />
