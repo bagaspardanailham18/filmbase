@@ -1,5 +1,5 @@
 # Filmbase
-Movie and Tvshow database app built with Kotlin
+Movie and Tvshow database app built with Kotlin (Implementing Room, Retrofit, Kotlin Coroutines, MVVM Architecture, Dependency Injection without library, Repository Pattern).
 
 ### App Features
 * **Movie** - menampilkan daftar movie terbaru
