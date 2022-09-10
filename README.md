@@ -1,5 +1,5 @@
 # Filmbase
-Android Movies build with Component Architechtures, Jetpack Pagination, Room, RxJava, Coroutines, Hilt
+Movie and Tvshow database app built with Kotlin
 
 ### App Features
 * **Movie** - menampilkan daftar movie terbaru
@@ -24,20 +24,18 @@ Base URL yang digunakan adalah sebagai berikut
 https://developers.themoviedb.org/3/
 ```
 
-#### Endoint Used
+#### Endpoint Used
 
 |Method | Endpoint | Usage |
 | ---- | ---- | --------------- |
 |GET| `/search/movie` | Search Movies|
-|GET| `/search/tv` | Search TV Show.| 
-|GET| `/search/tv` | Search TV Show.| 
-|GET| `/movie/{movie_id}` | Get Detail Movie.| 
-|GET| `/movie/popular` | Get Popular .| 
-|GET| `/movie/top_rated` | Get Top Rated Movie| 
-|GET| `/movie/upcoming` | Get Upcoming Movie.| 
-|GET| `/movie/{movie_id}/videos` | Get Videos Movie.| 
-|GET| `/tv/airing_today` | Get TV Airing Today.| 
-|GET| `/tv/{tv_id}` | Get TV Detail.| 
-|GET| `/tv/popular` | Get TV Popular.| 
-|GET| `/tv/top_rated` | Get TV Top Rated.| 
+|GET| `/search/tv` | Search TV Shows.| 
+|GET| `/movie/{movie_id}` | Get Movie Detail.| 
+|GET| `/movie/top_rated` | Get Top Rated Movies.| 
+|GET| `/movie/upcoming` | Get Upcoming Movies.| 
+|GET| `/movie/{movie_id}/videos` | Get Movie Videos.| 
+|GET| `/tv/airing_today` | Get Airing Today Tvshows.| 
+|GET| `/tv/top_rated` | Get Top Rated Tvshows.|
+|GET| `/tv/{tv_id}` | Get TV Detail.|
+|GET| `/tv/{tv_id}/videos` | Get Tvshow Videos.| 
 
