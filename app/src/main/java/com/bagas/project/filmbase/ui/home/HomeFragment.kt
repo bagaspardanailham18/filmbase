@@ -12,7 +12,9 @@ import com.bagas.project.filmbase.ui.SectionsPagerAdapter
 import com.bagas.project.filmbase.databinding.FragmentHomeBinding
 import com.dicoding.bfaa.mytablayout.animation.ZoomOutPageTransformer
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null

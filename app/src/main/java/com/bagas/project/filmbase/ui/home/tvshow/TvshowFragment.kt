@@ -16,13 +16,15 @@ import com.bagas.project.filmbase.data.responses.TopRatedTvshowItem
 import com.bagas.project.filmbase.databinding.FragmentTvshowBinding
 import com.bagas.project.filmbase.ui.DetailActivity
 import com.bagas.project.filmbase.ui.ViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class TvshowFragment : Fragment() {
 
     private var _binding: FragmentTvshowBinding? = null
     private val binding get() = _binding
 
-    private val tvshowViewModel by viewModels<TvshowViewModel>()
+    private val viewModel: TvshowViewModel by viewModels()
 
     private val airingTodayTvshowAdapter = ListAiringTodayTvshowAdapter()
     private val topRatedTvshowAdapter = ListTopRatedTvshowAdapter()
@@ -39,10 +41,10 @@ class TvshowFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity())
-        val viewModel: TvshowViewModel by viewModels {
-            factory
-        }
+//        val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity())
+//        val viewModel: TvshowViewModel by viewModels {
+//            factory
+//        }
 
 //        tvshowViewModel.listAiringTodayTvshow.observe(viewLifecycleOwner) { listData ->
 //            setAiringTodayTvshowData(listData)

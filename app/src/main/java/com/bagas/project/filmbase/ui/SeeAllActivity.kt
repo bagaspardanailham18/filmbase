@@ -9,7 +9,9 @@ import com.bagas.project.filmbase.R
 import com.bagas.project.filmbase.data.responses.UpcomingMoviesItem
 import com.bagas.project.filmbase.databinding.ActivitySeeAllBinding
 import com.bagas.project.filmbase.ui.home.movie.MovieViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SeeAllActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySeeAllBinding
 

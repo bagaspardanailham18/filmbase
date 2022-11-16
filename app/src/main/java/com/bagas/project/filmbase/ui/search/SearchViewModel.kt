@@ -8,11 +8,14 @@ import com.bagas.project.filmbase.BuildConfig
 import com.bagas.project.filmbase.data.remote.ApiConfig
 import com.bagas.project.filmbase.data.repository.MovieRepository
 import com.bagas.project.filmbase.data.responses.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
-class SearchViewModel(private val movieRepository: MovieRepository) : ViewModel() {
+@HiltViewModel
+class SearchViewModel @Inject constructor(private val movieRepository: MovieRepository) : ViewModel() {
 
     private val _listMovieSearch = MutableLiveData<List<MovieSearchItem?>>()
     val listMovieSearch: LiveData<List<MovieSearchItem?>> = _listMovieSearch
@@ -22,11 +25,6 @@ class SearchViewModel(private val movieRepository: MovieRepository) : ViewModel(
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
-
-    init {
-        getTrendingMovies()
-        getTrendingTvshow()
-    }
 
     companion object {
         const val TAG = "SearchViewModel"

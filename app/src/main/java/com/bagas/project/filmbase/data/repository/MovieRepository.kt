@@ -11,20 +11,14 @@ import com.bagas.project.filmbase.utils.AppExecutors
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class MovieRepository private constructor(
+@Singleton
+class MovieRepository @Inject constructor(
     private val apiService: ApiService,
-    private val movieDao: MovieDao,
-    private val tvshowDao: TvshowDao,
-    private val appExecutors: AppExecutors
+    private val movieRoomDatabase: MovieRoomDatabase
 ) {
-
-//    private val upcomingMovieResult = MediatorLiveData<Result<List<UpcomingMovieEntity>>>()
-//    private val topRatedMovieResult = MediatorLiveData<Result<List<TopRatedMovieEntity>>>()
-//    private val airingTodayTvResult = MediatorLiveData<Result<List<AiringTodayTvEntity>>>()
-//    private val topRatedTvResult = MediatorLiveData<Result<List<TopRatedTvEntity>>>()
-//    private val trendingMovieResult = MediatorLiveData<Result<List<TrendingMovieEntity>>>()
-//    private val trendingTvResult = MediatorLiveData<Result<List<TrendingTvshowEntity>>>()
 
     fun getUpcomingMovies(): LiveData<Result<List<UpcomingMovieEntity>>> = liveData {
         emit(Result.Loading)
@@ -42,13 +36,13 @@ class MovieRepository private constructor(
                     data.backdropPath
                 )
             }
-            movieDao.deleteAllUpcomingMovie()
-            movieDao.insertUpcomingMovies(upcomingMovieList)
+            movieRoomDatabase.movieDao().deleteAllUpcomingMovie()
+            movieRoomDatabase.movieDao().insertUpcomingMovies(upcomingMovieList)
         } catch (e: Exception) {
             Log.d("MovieRepository", "getUpcomingMovies : ${e.message.toString()}")
             emit(Result.Error(e.message.toString()))
         }
-        val localData: LiveData<Result<List<UpcomingMovieEntity>>> = movieDao.getUpcomingMovies().map {
+        val localData: LiveData<Result<List<UpcomingMovieEntity>>> = movieRoomDatabase.movieDao().getUpcomingMovies().map {
             Result.Success(it)
         }
         emitSource(localData)
@@ -70,13 +64,13 @@ class MovieRepository private constructor(
                     data.backdropPath
                 )
             }
-            movieDao.deleteAllTopRatedMovie()
-            movieDao.insertTopRatedMovies(topRatedMovieList)
+            movieRoomDatabase.movieDao().deleteAllTopRatedMovie()
+            movieRoomDatabase.movieDao().insertTopRatedMovies(topRatedMovieList)
         } catch (e: Exception) {
             Log.d("MovieRepository", "getTopRatedMovies : ${e.message.toString()}")
             emit(Result.Error(e.message.toString()))
         }
-        val localData: LiveData<Result<List<TopRatedMovieEntity>>> = movieDao.getTopRatedMovies().map {
+        val localData: LiveData<Result<List<TopRatedMovieEntity>>> = movieRoomDatabase.movieDao().getTopRatedMovies().map {
             Result.Success(it)
         }
         emitSource(localData)
@@ -98,13 +92,13 @@ class MovieRepository private constructor(
                     data?.backdropPath
                 )
             }
-            tvshowDao.deleteAllAiringToday()
-            tvshowDao.insertAiringToday(airingTodayTvList!!)
+            movieRoomDatabase.tvshowDao().deleteAllAiringToday()
+            movieRoomDatabase.tvshowDao().insertAiringToday(airingTodayTvList!!)
         } catch (e: Exception) {
             Log.d("MovieRepository", "getAiringTodayTv : ${e.message.toString()}")
             emit(Result.Error(e.message.toString()))
         }
-        val localData: LiveData<Result<List<AiringTodayTvEntity>>> = tvshowDao.getAiringTodayTv().map {
+        val localData: LiveData<Result<List<AiringTodayTvEntity>>> = movieRoomDatabase.tvshowDao().getAiringTodayTv().map {
             Result.Success(it)
         }
         emitSource(localData)
@@ -126,13 +120,13 @@ class MovieRepository private constructor(
                     data?.backdropPath
                 )
             }
-            tvshowDao.deleteAllTopRatedTv()
-            tvshowDao.insertTopRatedTv(topRatedTvList!!)
+            movieRoomDatabase.tvshowDao().deleteAllTopRatedTv()
+            movieRoomDatabase.tvshowDao().insertTopRatedTv(topRatedTvList!!)
         } catch (e: Exception) {
             Log.d("MovieRepository", "getTopRatedTvshows : ${e.message.toString()}")
             emit(Result.Error(e.message.toString()))
         }
-        val localData: LiveData<Result<List<TopRatedTvEntity>>> = tvshowDao.getTopRatedTv().map {
+        val localData: LiveData<Result<List<TopRatedTvEntity>>> = movieRoomDatabase.tvshowDao().getTopRatedTv().map {
             Result.Success(it)
         }
         emitSource(localData)
@@ -154,13 +148,13 @@ class MovieRepository private constructor(
                     data.backdropPath
                 )
             }
-            movieDao.deleteAllTrendingMovie()
-            movieDao.insertTrendingMovie(trendingMovieList!!)
+            movieRoomDatabase.movieDao().deleteAllTrendingMovie()
+            movieRoomDatabase.movieDao().insertTrendingMovie(trendingMovieList!!)
         } catch (e: Exception) {
             Log.d("MovieRepository", "getTrendingMovies : ${e.message.toString()}")
             emit(Result.Error(e.message.toString()))
         }
-        val localData: LiveData<Result<List<TrendingMovieEntity>>> = movieDao.getTrendingMovies().map {
+        val localData: LiveData<Result<List<TrendingMovieEntity>>> = movieRoomDatabase.movieDao().getTrendingMovies().map {
             Result.Success(it)
         }
         emitSource(localData)
@@ -182,13 +176,13 @@ class MovieRepository private constructor(
                     data.backdropPath
                 )
             }
-            tvshowDao.deleteAllTrendingTvshow()
-            tvshowDao.insertTrendingTvshow(trendingTvList!!)
+            movieRoomDatabase.tvshowDao().deleteAllTrendingTvshow()
+            movieRoomDatabase.tvshowDao().insertTrendingTvshow(trendingTvList!!)
         } catch (e: Exception) {
             Log.d("MovieRepository", "getTrendingTv : ${e.message.toString()}")
             emit(Result.Error(e.message.toString()))
         }
-        val localData: LiveData<Result<List<TrendingTvshowEntity>>> = tvshowDao.getTrendingTvshows().map {
+        val localData: LiveData<Result<List<TrendingTvshowEntity>>> = movieRoomDatabase.tvshowDao().getTrendingTvshows().map {
             Result.Success(it)
         }
         emitSource(localData)
@@ -196,60 +190,43 @@ class MovieRepository private constructor(
 
     suspend fun insertFavoriteMovie(movie: FavoriteMovieEntity) {
         //hapus penggunaan appExecutor
-        movieDao.insertFavoriteMovie(movie)
+        movieRoomDatabase.movieDao().insertFavoriteMovie(movie)
     }
 
     suspend fun deleteFavoriteMovie(movie: FavoriteMovieEntity) {
-        movieDao.deleteFavoriteMovie(movie)
+        movieRoomDatabase.movieDao().deleteFavoriteMovie(movie)
     }
 
     fun getFavoriteMovies(): LiveData<List<FavoriteMovieEntity>> {
-        return movieDao.getAllFavoriteMovies()
+        return movieRoomDatabase.movieDao().getAllFavoriteMovies()
     }
 
     suspend fun insertFavoriteTvshow(tv: FavoriteTvEntity) {
-        tvshowDao.insertFavoriteTvshow(tv)
+        movieRoomDatabase.tvshowDao().insertFavoriteTvshow(tv)
     }
 
     suspend fun deleteFavoriteTvshow(tv: FavoriteTvEntity) {
-        tvshowDao.deleteFavoriteTvshow(tv)
+        movieRoomDatabase.tvshowDao().deleteFavoriteTvshow(tv)
     }
 
     fun getFavoriteTvshows(): LiveData<List<FavoriteTvEntity>> {
-        return tvshowDao.getAllFavoriteTvshows()
+        return movieRoomDatabase.tvshowDao().getAllFavoriteTvshows()
     }
 
     fun getFavoriteMovieById(id: Int): LiveData<FavoriteMovieEntity> {
-        return movieDao.getFavoriteMovieById(id)
+        return movieRoomDatabase.movieDao().getFavoriteMovieById(id)
     }
 
     fun getFavoriteTvById(id: Int): LiveData<FavoriteTvEntity> {
-        return tvshowDao.getFavoriteTvById(id)
+        return movieRoomDatabase.tvshowDao().getFavoriteTvById(id)
     }
 
     fun getFavoriteMoviesByQuery(query: String): LiveData<List<FavoriteMovieEntity>> {
-        return movieDao.getFavoriteMovieByQuery(query)
+        return movieRoomDatabase.movieDao().getFavoriteMovieByQuery(query)
     }
 
     fun getFavoriteTvByQuery(query: String): LiveData<List<FavoriteTvEntity>> {
-        return tvshowDao.getFavoriteTvByQuery(query)
-    }
-
-
-    companion object {
-        @Volatile
-        private var instance: MovieRepository? = null
-
-        @JvmStatic
-        fun getInstance(
-            apiService: ApiService,
-            movieDao: MovieDao,
-            tvshowDao: TvshowDao,
-            appExecutors: AppExecutors
-        ) : MovieRepository =
-            instance ?: synchronized(this) {
-                instance ?: MovieRepository(apiService, movieDao, tvshowDao, appExecutors)
-            }.also { instance = it }
+        return movieRoomDatabase.tvshowDao().getFavoriteTvByQuery(query)
     }
 
 }

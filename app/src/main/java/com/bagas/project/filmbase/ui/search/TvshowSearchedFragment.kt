@@ -17,13 +17,16 @@ import com.bagas.project.filmbase.data.responses.TvshowSearchItem
 import com.bagas.project.filmbase.databinding.FragmentTvshowSearchedBinding
 import com.bagas.project.filmbase.ui.DetailActivity
 import com.bagas.project.filmbase.ui.ViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class TvshowSearchedFragment : Fragment() {
 
     private var _binding: FragmentTvshowSearchedBinding? = null
     private val binding get() = _binding
 
 //    private val searchViewModel by viewModels<SearchViewModel>()
+    private val viewModel: SearchViewModel by viewModels()
 
     private val trendingTvAdapter = ListTrendingTvAdapter()
 
@@ -38,11 +41,11 @@ class TvshowSearchedFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity())
-        val viewModel: SearchViewModel by viewModels {
-            factory
-        }
+//
+//        val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity())
+//        val viewModel: SearchViewModel by viewModels {
+//            factory
+//        }
 
 //        searchViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
 //            showProgressBar(isLoading)

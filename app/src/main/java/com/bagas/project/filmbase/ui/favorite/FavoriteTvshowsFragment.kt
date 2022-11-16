@@ -13,11 +13,15 @@ import com.bagas.project.filmbase.data.local.FavoriteTvEntity
 import com.bagas.project.filmbase.databinding.FragmentFavoriteTvshowsBinding
 import com.bagas.project.filmbase.ui.ViewModelFactory
 import com.bagas.project.filmbase.ui.home.tvshow.TvshowViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class FavoriteTvshowsFragment : Fragment() {
 
     private var _binding: FragmentFavoriteTvshowsBinding? = null
     private val binding get() = _binding
+
+    private val viewModel: FavoriteViewModel by viewModels()
 
     private val adapter = FavoritedTvAdapter()
 
@@ -33,10 +37,10 @@ class FavoriteTvshowsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity())
-        val viewModel: FavoriteViewModel by viewModels {
-            factory
-        }
+//        val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity())
+//        val viewModel: FavoriteViewModel by viewModels {
+//            factory
+//        }
 
         viewModel.getFavoriteTvshows().observe(viewLifecycleOwner) { favoritedTv ->
             if (favoritedTv.isNotEmpty()) {

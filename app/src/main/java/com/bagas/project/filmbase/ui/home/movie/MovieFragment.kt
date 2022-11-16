@@ -22,11 +22,15 @@ import com.bagas.project.filmbase.ui.SeeAllActivity.Companion.SEE_ALL_TYPE
 import com.bagas.project.filmbase.ui.SeeAllActivity.Companion.TOP_RATED_MOVIES
 import com.bagas.project.filmbase.ui.SeeAllActivity.Companion.UPCOMING_MOVIES
 import com.bagas.project.filmbase.ui.ViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MovieFragment : Fragment() {
 
     private var _binding: FragmentMovieBinding? = null
     private val binding get() = _binding
+
+    private val viewModel: MovieViewModel by viewModels()
 
     private val upcomingMovieAdapter = ListUpcomingMovieAdapter()
     private val topRatedMovieAdapter = ListTopRatedMovieAdapter()
@@ -43,25 +47,31 @@ class MovieFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity())
-        val viewModel: MovieViewModel by viewModels {
-            factory
+//        val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity())
+//        val viewModel: MovieViewModel by viewModels {
+//            factory
+//        }
+
+        getUpcomingMoviesData()
+        getTopRatedMoviesData()
+
+        showUpcomingMoviesRv()
+        showTopRatedMoviesRv()
+
+        binding?.seeAllUpcoming?.setOnClickListener {
+            val toSeeAllUpcoming = Intent(requireActivity(), SeeAllActivity::class.java)
+            toSeeAllUpcoming.putExtra(SEE_ALL_TYPE, UPCOMING_MOVIES)
+            startActivity(toSeeAllUpcoming)
         }
 
-//        movieViewModel.listUpcomingMovies.observe(viewLifecycleOwner) { listUpcomingMovie ->
-//            setUpcomingMoviesData(listUpcomingMovie)
-//            Log.d("MovieFragment", listUpcomingMovie.toString())
-//        }
-//
-//        movieViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-//            showProgressBar(isLoading)
-//        }
-//
-//        movieViewModel.listTopRatedMovies.observe(viewLifecycleOwner) { listTopRatedMovies ->
-//            setTopRatedMoviesData(listTopRatedMovies)
-//        }
+        binding?.seeAllTop?.setOnClickListener {
+            val toSeeAllTop = Intent(requireActivity(), SeeAllActivity::class.java)
+            toSeeAllTop.putExtra(SEE_ALL_TYPE, TOP_RATED_MOVIES)
+            startActivity(toSeeAllTop)
+        }
+    }
 
-
+    private fun getUpcomingMoviesData() {
         viewModel.getUpcomingMovies().observe(viewLifecycleOwner) { result ->
             if (result != null) {
                 when (result) {
@@ -84,7 +94,9 @@ class MovieFragment : Fragment() {
                 }
             }
         }
+    }
 
+    private fun getTopRatedMoviesData() {
         viewModel.getTopRatedMovies().observe(viewLifecycleOwner) { result ->
             if (result != null) {
                 when (result) {
@@ -107,57 +119,7 @@ class MovieFragment : Fragment() {
                 }
             }
         }
-
-        showUpcomingMoviesRv()
-        showTopRatedMoviesRv()
-
-        binding?.seeAllUpcoming?.setOnClickListener {
-//            val toSeeAllActivity = MovieFragmentDirections.actionMovieFragmentToSeeAllActivity()
-//            toSeeAllActivity.seeAllType = UPCOMING_MOVIES
-//            Navigation.findNavController(view).navigate(toSeeAllActivity)
-            val toSeeAllUpcoming = Intent(requireActivity(), SeeAllActivity::class.java)
-            toSeeAllUpcoming.putExtra(SEE_ALL_TYPE, UPCOMING_MOVIES)
-            startActivity(toSeeAllUpcoming)
-        }
-
-        binding?.seeAllTop?.setOnClickListener {
-//            val toSeeAllActivity = MovieFragmentDirections.actionMovieFragmentToSeeAllActivity()
-//            toSeeAllActivity.seeAllType = TOP_RATED_MOVIES
-//            Navigation.findNavController(view).navigate(toSeeAllActivity)
-            val toSeeAllTop = Intent(requireActivity(), SeeAllActivity::class.java)
-            toSeeAllTop.putExtra(SEE_ALL_TYPE, TOP_RATED_MOVIES)
-            startActivity(toSeeAllTop)
-        }
     }
-
-
-//    private fun setUpcomingMoviesData(data: List<UpcomingMoviesItem?>) {
-//        val adapter = ListUpcomingMovieAdapter(data)
-//        binding?.rvUpcomingMovie?.adapter = adapter
-//
-//        adapter.setOnItemClickCallback(object : ListUpcomingMovieAdapter.OnItemClickCallback {
-//            override fun onItemClicked(data: UpcomingMoviesItem) {
-//                val intent = Intent(requireActivity(), DetailActivity::class.java)
-//                intent.putExtra(EXTRA_MOVIE_DETAIL, data.id)
-//                startActivity(intent)
-//            }
-//
-//        })
-//    }
-
-//    private fun setTopRatedMoviesData(data: List<TopRatedMoviesItem>) {
-//        val adapter = ListTopRatedMovieAdapter(data)
-//        binding?.rvTopRatedMovie?.adapter = adapter
-//
-//        adapter.setOnItemClickCallback(object : ListTopRatedMovieAdapter.OnItemClickCallback {
-//            override fun onItemClicked(data: TopRatedMoviesItem) {
-//                val intent = Intent(requireActivity(), DetailActivity::class.java)
-//                intent.putExtra(EXTRA_MOVIE_DETAIL, data.id)
-//                startActivity(intent)
-//            }
-//
-//        })
-//    }
 
     private fun showUpcomingMoviesRv() {
         binding?.rvUpcomingMovie?.adapter = upcomingMovieAdapter

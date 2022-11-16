@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bagas.project.filmbase.BuildConfig
+import com.bagas.project.filmbase.R
 import com.bagas.project.filmbase.data.local.TopRatedMovieEntity
 import com.bagas.project.filmbase.data.local.UpcomingMovieEntity
 import com.bagas.project.filmbase.data.responses.TopRatedMoviesItem
@@ -49,6 +50,8 @@ class ListTopRatedMovieAdapter: ListAdapter<TopRatedMovieEntity, ListTopRatedMov
 
                 Glide.with(itemView.context)
                     .load(BuildConfig.IMAGE_URL + topRatedMovie.posterPath)
+                    .error(R.drawable.image_load_error)
+                    .placeholder(R.drawable.image_loading_placeholder)
                     .into(tvItemImg)
 
                 itemView.setOnClickListener {

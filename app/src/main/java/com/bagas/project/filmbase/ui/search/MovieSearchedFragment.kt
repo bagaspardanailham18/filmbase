@@ -16,13 +16,15 @@ import com.bagas.project.filmbase.databinding.FragmentMovieSearchedBinding
 import com.bagas.project.filmbase.ui.DetailActivity
 import com.bagas.project.filmbase.ui.DetailActivity.Companion.EXTRA_MOVIE_DETAIL
 import com.bagas.project.filmbase.ui.ViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MovieSearchedFragment : Fragment() {
 
     private var _binding: FragmentMovieSearchedBinding? = null
     private val binding get() = _binding
 
-//    private val searchViewModel by viewModels<SearchViewModel>()
+    private val viewModel: SearchViewModel by viewModels()
 
     private val trendingMovieAdapter = ListTrendingMovieAdapter()
 
@@ -38,10 +40,10 @@ class MovieSearchedFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity())
-        val viewModel: SearchViewModel by viewModels {
-            factory
-        }
+//        val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity())
+//        val viewModel: SearchViewModel by viewModels {
+//            factory
+//        }
 
 //        searchViewModel.listTrendingMovies.observe(viewLifecycleOwner) { listData ->
 //            setTrendingMoviesData(listData)

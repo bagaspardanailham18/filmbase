@@ -11,19 +11,23 @@ import com.bagas.project.filmbase.data.responses.TopRatedMoviesItem
 import com.bagas.project.filmbase.data.responses.TopRatedMoviesResponse
 import com.bagas.project.filmbase.data.responses.UpcomingMoviesItem
 import com.bagas.project.filmbase.data.responses.UpcomingMoviesResponse
+import com.bumptech.glide.Glide.init
+import dagger.hilt.android.lifecycle.HiltViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
-class MovieViewModel(private val movieRepository: MovieRepository) : ViewModel() {
+@HiltViewModel
+class MovieViewModel @Inject constructor(private val movieRepository: MovieRepository) : ViewModel() {
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
-    init {
-        getUpcomingMovies()
-        getTopRatedMovies()
-    }
+//    init {
+//        getUpcomingMovies()
+//        getTopRatedMovies()
+//    }
 
     companion object {
         const val TAG = "MovieFragment"

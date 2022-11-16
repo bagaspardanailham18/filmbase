@@ -14,11 +14,15 @@ import com.bagas.project.filmbase.data.local.FavoriteMovieEntity
 import com.bagas.project.filmbase.databinding.FragmentFavoriteMoviesBinding
 import com.bagas.project.filmbase.ui.ViewModelFactory
 import com.bagas.project.filmbase.ui.home.movie.MovieViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class FavoriteMoviesFragment : Fragment() {
 
     private var _binding: FragmentFavoriteMoviesBinding? = null
     private val binding get() = _binding
+
+    private val viewModel: FavoriteViewModel by viewModels()
 
     private val adapter = FavoritedMovieAdapter()
 
@@ -34,10 +38,10 @@ class FavoriteMoviesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity())
-        val viewModel: FavoriteViewModel by viewModels {
-            factory
-        }
+//        val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity())
+//        val viewModel: FavoriteViewModel by viewModels {
+//            factory
+//        }
 
         viewModel.getFavoriteMovies().observe(viewLifecycleOwner) { favoritedMovies ->
             if (favoritedMovies.isNotEmpty()) {

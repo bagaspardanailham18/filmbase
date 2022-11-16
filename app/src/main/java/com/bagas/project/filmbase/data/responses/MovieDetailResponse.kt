@@ -19,9 +19,6 @@ data class MovieDetailResponse(
 	@field:SerializedName("backdrop_path")
 	val backdropPath: String? = null,
 
-	@field:SerializedName("revenue")
-	val revenue: Long? = null,
-
 	@field:SerializedName("genres")
 	val genres: List<MovieGenresItem?>? = null,
 
@@ -36,9 +33,6 @@ data class MovieDetailResponse(
 
 	@field:SerializedName("vote_count")
 	val voteCount: Int? = null,
-
-	@field:SerializedName("budget")
-	val budget: Int? = null,
 
 	@field:SerializedName("overview")
 	val overview: String? = null,
@@ -64,20 +58,8 @@ data class MovieDetailResponse(
 	@field:SerializedName("vote_average")
 	val voteAverage: Double? = null,
 
-	@field:SerializedName("belongs_to_collection")
-	val belongsToCollection: Any? = null,
-
-	@field:SerializedName("tagline")
-	val tagline: String? = null,
-
 	@field:SerializedName("adult")
 	val adult: Boolean? = null,
-
-	@field:SerializedName("homepage")
-	val homepage: String? = null,
-
-	@field:SerializedName("status")
-	val status: String? = null
 )
 
 data class MovieSpokenLanguagesItem(

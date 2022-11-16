@@ -1,10 +1,11 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'com.google.secrets_gradle_plugin' version '0.4'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
     id "androidx.navigation.safeargs"
     id "kotlin-parcelize"
     id "kotlin-kapt"
+    id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -71,8 +72,23 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.5.1" //liveData
     implementation "androidx.room:room-ktx:2.4.3"
 
+    //dagger hilt
+    implementation "com.google.dagger:hilt-android:2.41"
+    implementation 'androidx.test:monitor:1.5.0'
+    kapt "com.google.dagger:hilt-android-compiler:2.41"
+
     //animation
     implementation "com.airbnb.android:lottie:3.4.0"
+
+    //mockito
+    testImplementation 'org.mockito:mockito-core:3.12.4'
+    testImplementation 'org.mockito:mockito-inline:3.12.4'
+
+    //special testing
+    testImplementation "androidx.arch.core:core-testing:2.1.0" // InstantTaskExecutorRule
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4" //TestDispatcher
+    androidTestImplementation "androidx.arch.core:core-testing:2.1.0" //InstantTaskExecutorRule
+    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4" //TestDispatcher
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

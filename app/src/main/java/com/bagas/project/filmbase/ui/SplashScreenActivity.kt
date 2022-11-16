@@ -11,8 +11,10 @@ import android.view.Window
 import android.view.WindowManager
 import androidx.core.content.ContextCompat
 import com.bagas.project.filmbase.R
+import dagger.hilt.android.AndroidEntryPoint
 
 @SuppressLint("CustomSplashScreen")
+@AndroidEntryPoint
 class SplashScreenActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

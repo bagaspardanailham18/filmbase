@@ -8,13 +8,13 @@ import com.bagas.project.filmbase.utils.AppExecutors
 
 object Injection {
 
-    fun provideRepository(context: Context): MovieRepository {
-        val apiService = ApiConfig.getApiService()
-        val database = MovieRoomDatabase.getDatabase(context)
-        val movieDao = database.movieDao()
-        val tvshowDao = database.tvshowDao()
-        val appExecutors = AppExecutors()
-        return MovieRepository.getInstance(apiService, movieDao, tvshowDao, appExecutors)
-    }
+//    fun provideRepository(context: Context): MovieRepository {
+//        val apiService = ApiConfig.getApiService()
+//        val database = MovieRoomDatabase.getDatabase(context)
+//        val movieDao = database.movieDao()
+//        val tvshowDao = database.tvshowDao()
+//        val appExecutors = AppExecutors()
+//        return MovieRepository.getInstance(apiService, movieDao, tvshowDao, appExecutors)
+//    }
 
 }

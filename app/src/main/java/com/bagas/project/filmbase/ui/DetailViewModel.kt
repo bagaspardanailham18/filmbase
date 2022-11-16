@@ -11,12 +11,15 @@ import com.bagas.project.filmbase.data.local.FavoriteTvEntity
 import com.bagas.project.filmbase.data.remote.ApiConfig
 import com.bagas.project.filmbase.data.repository.MovieRepository
 import com.bagas.project.filmbase.data.responses.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
-class DetailViewModel(private val movieRepository: MovieRepository) : ViewModel() {
+@HiltViewModel
+class DetailViewModel @Inject constructor(private val movieRepository: MovieRepository) : ViewModel() {
 
     private val _movieDetail = MutableLiveData<MovieDetailResponse?>()
     val movieDetail: LiveData<MovieDetailResponse?> = _movieDetail

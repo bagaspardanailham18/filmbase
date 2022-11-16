@@ -10,7 +10,9 @@ import com.bagas.project.filmbase.R
 import com.bagas.project.filmbase.databinding.FragmentFavoriteBinding
 import com.bagas.project.filmbase.ui.search.SearchFragment
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class FavoriteFragment : Fragment() {
 
     private var _binding: FragmentFavoriteBinding? = null

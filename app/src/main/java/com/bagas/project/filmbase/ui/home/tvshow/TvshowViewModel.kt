@@ -11,19 +11,17 @@ import com.bagas.project.filmbase.data.responses.AiringTodayTvshowItem
 import com.bagas.project.filmbase.data.responses.AiringTodayTvshowResponse
 import com.bagas.project.filmbase.data.responses.TopRatedTvshowItem
 import com.bagas.project.filmbase.data.responses.TopRatedTvshowResponse
+import dagger.hilt.android.lifecycle.HiltViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
-class TvshowViewModel(private val movieRepository: MovieRepository): ViewModel() {
+@HiltViewModel
+class TvshowViewModel @Inject constructor(private val movieRepository: MovieRepository): ViewModel() {
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
-
-    init {
-        getAiringTodayTvshow()
-        getTopRatedTvshow()
-    }
 
     fun getAiringTodayTvshow() = movieRepository.getAiringTodayTv()
 

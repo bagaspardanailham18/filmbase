@@ -8,23 +8,26 @@ import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bagas.project.filmbase.BuildConfig
+import com.bagas.project.filmbase.R
 import com.bagas.project.filmbase.data.local.FavoriteMovieEntity
 import com.bagas.project.filmbase.data.local.FavoriteTvEntity
 import com.bagas.project.filmbase.data.responses.MovieProductionCompaniesItem
 import com.bagas.project.filmbase.data.responses.TvProductionCompaniesItem
 import com.bagas.project.filmbase.databinding.ActivityDetailBinding
 import com.bumptech.glide.Glide
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class DetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailBinding
 
-//    private val detailViewModel by viewModels<DetailViewModel>()
+    private val detailViewModel by viewModels<DetailViewModel>()
 
-    private val factory: ViewModelFactory = ViewModelFactory.getInstance(this)
-    private val detailViewModel: DetailViewModel by viewModels {
-        factory
-    }
+//    private val factory: ViewModelFactory = ViewModelFactory.getInstance(this)
+//    private val detailViewModel: DetailViewModel by viewModels {
+//        factory
+//    }
 
     companion object {
         const val EXTRA_MOVIE_DETAIL = "extra_movie_detail"
@@ -65,15 +68,14 @@ class DetailActivity : AppCompatActivity() {
         detailViewModel.getMovieDetail(data)
         detailViewModel.movieDetail.observe(this) { data ->
             detailViewModel.getMovieVideos(data?.id)
-//            setFavoriteState()
 
             binding.tvDetailTitle.text = data?.title
             binding.tvDetailDate.text = data?.releaseDate
 
             if (data?.genres!!.isNotEmpty()) {
-                binding.tvDetailGenre.text = "-"
-            } else {
                 binding.tvDetailGenre.text = data.genres.get(0)?.name.toString()
+            } else {
+                binding.tvDetailGenre.text = "-"
             }
 
             binding.tvDetailFavorites.text = data.voteAverage?.toString()?.trim()
@@ -164,10 +166,14 @@ class DetailActivity : AppCompatActivity() {
 
             Glide.with(this)
                 .load(BuildConfig.IMAGE_URL + data.backdropPath)
+                .error(R.drawable.image_load_error)
+                .placeholder(R.drawable.image_loading_placeholder)
                 .into(binding.backdrop)
 
             Glide.with(this)
                 .load(BuildConfig.IMAGE_URL + data.posterPath)
+                .error(R.drawable.image_load_error)
+                .placeholder(R.drawable.image_loading_placeholder)
                 .into(binding.tvDetailPoster)
 
             detailViewModel.tvVideos.observe(this) { video ->

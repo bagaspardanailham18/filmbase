@@ -13,7 +13,9 @@ import com.bagas.project.filmbase.R
 import com.bagas.project.filmbase.databinding.FragmentSearchBinding
 import com.dicoding.bfaa.mytablayout.animation.ZoomOutPageTransformer
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SearchFragment : Fragment() {
 
     private var _binding: FragmentSearchBinding? = null
