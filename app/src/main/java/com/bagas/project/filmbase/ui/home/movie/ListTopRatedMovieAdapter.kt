@@ -15,13 +15,6 @@ import com.bumptech.glide.Glide
 
 class ListTopRatedMovieAdapter: ListAdapter<TopRatedMovieEntity, ListTopRatedMovieAdapter.ListTopRatedMovieVH>(DIFF_CALLBACK
 ) {
-
-//    private lateinit var onItemClickCallback: OnItemClickCallback
-//
-//    fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback) {
-//        this.onItemClickCallback = onItemClickCallback
-//    }
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -80,8 +73,4 @@ class ListTopRatedMovieAdapter: ListAdapter<TopRatedMovieEntity, ListTopRatedMov
 
             }
     }
-
-//    interface OnItemClickCallback {
-//        fun onItemClicked(data: TopRatedMoviesItem)
-//    }
 }

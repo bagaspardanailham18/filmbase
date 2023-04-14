@@ -67,8 +67,4 @@ class ListAiringTodayTvshowAdapter: ListAdapter<AiringTodayTvEntity, ListAiringT
             }
     }
 
-    interface OnItemClickCallback {
-        fun onItemClicked(data: AiringTodayTvshowItem)
-    }
-
 }

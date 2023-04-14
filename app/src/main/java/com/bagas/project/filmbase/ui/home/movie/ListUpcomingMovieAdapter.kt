@@ -73,8 +73,4 @@ class ListUpcomingMovieAdapter: ListAdapter<UpcomingMovieEntity, ListUpcomingMov
 
             }
     }
-
-    interface OnItemClickCallback {
-        fun onItemClicked(data: UpcomingMoviesItem)
-    }
 }

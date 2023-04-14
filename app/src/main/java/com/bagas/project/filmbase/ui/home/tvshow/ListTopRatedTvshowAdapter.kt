@@ -72,8 +72,4 @@ class ListTopRatedTvshowAdapter: ListAdapter<TopRatedTvEntity, ListTopRatedTvsho
 
             }
     }
-
-    interface OnItemClickCallback {
-        fun onItemClicked(data: TopRatedTvshowItem?)
-    }
 }
