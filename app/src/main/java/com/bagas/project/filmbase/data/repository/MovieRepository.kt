@@ -8,8 +8,12 @@ import com.bagas.project.filmbase.data.local.*
 import com.bagas.project.filmbase.data.remote.ApiService
 import com.bagas.project.filmbase.data.responses.*
 import com.bagas.project.filmbase.utils.AppExecutors
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import retrofit2.Call
 import retrofit2.Callback
+import retrofit2.HttpException
 import retrofit2.Response
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -74,6 +78,78 @@ class MovieRepository @Inject constructor(
             Result.Success(it)
         }
         emitSource(localData)
+    }
+
+    suspend fun getMovieDetail(movieId: Int?): Flow<Result<MovieDetailResponse>> = flow {
+        emit(Result.Loading)
+        try {
+            val response = apiService.getMovieDetail(movieId, BuildConfig.API_KEY)
+            emit(Result.Success(response))
+        } catch (t: Throwable) {
+            if (t is HttpException) {
+                when (t.code()) {
+                    404 -> {
+                        Result.Error("Not Found")
+                    }
+                }
+            } else {
+                Result.Error("No internet connection")
+            }
+        }
+    }
+
+    suspend fun getTvshowDetail(tvshowId: Int?): Flow<Result<TvshowDetailResponse>> = flow {
+        emit(Result.Loading)
+        try {
+            val response = apiService.getTvDetail(tvshowId, BuildConfig.API_KEY)
+            emit(Result.Success(response))
+        } catch (t: Throwable) {
+            if (t is HttpException) {
+                when (t.code()) {
+                    404 -> {
+                        Result.Error("Not Found")
+                    }
+                }
+            } else {
+                Result.Error("No internet connection")
+            }
+        }
+    }
+
+    suspend fun getMovieVideos(movieId: Int?): Flow<Result<MovieVideoResponse>> = flow {
+        emit(Result.Loading)
+        try {
+            val response = apiService.getMovieVideos(movieId, BuildConfig.API_KEY)
+            emit(Result.Success(response))
+        } catch (t: Throwable) {
+            if (t is HttpException) {
+                when (t.code()) {
+                    404 -> {
+                        Result.Error("Not Found")
+                    }
+                }
+            } else {
+                Result.Error("No internet connection")
+            }
+        }
+    }
+
+    suspend fun getTvshowVideos(tvshowId: Int?): Flow<Result<TvshowVideoResponse>> = flow {
+        emit(Result.Loading)
+        try {
+            val response = apiService.getTvVideos(tvshowId, BuildConfig.API_KEY)
+            emit(Result.Success(response))
+        } catch (t: Throwable) {
+            if (t is HttpException) {
+                when (t.code()) {
+                    404 -> {
+                        Result.Error("Not Found")
+                    }
+                }
+            } else {
+                Result.Error("No internet connection")
+            }
+        }
     }
 
     fun getAiringTodayTv(): LiveData<Result<List<AiringTodayTvEntity>>> = liveData {

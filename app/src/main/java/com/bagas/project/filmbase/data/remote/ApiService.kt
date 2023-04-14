@@ -60,26 +60,26 @@ interface ApiService {
     ) : MultiSearchResponse
 
     @GET("movie/{movie_id}")
-    fun getMovieDetail(
-        @Path("movie_id") movieId: Int,
+    suspend fun getMovieDetail(
+        @Path("movie_id") movieId: Int?,
         @Query("api_key") apiKey: String
-    ) : Call<MovieDetailResponse>
+    ) : MovieDetailResponse
 
     @GET("tv/{tv_id}")
-    fun getTvDetail(
-        @Path("tv_id") tvId: Int,
+    suspend fun getTvDetail(
+        @Path("tv_id") tvId: Int?,
         @Query("api_key") apiKey: String
-    ) : Call<TvshowDetailResponse>
+    ) : TvshowDetailResponse
 
     @GET("movie/{movie_id}/videos")
-    fun getMovieVideos(
-        @Path("movie_id") movieId: Int,
+    suspend fun getMovieVideos(
+        @Path("movie_id") movieId: Int?,
         @Query("api_key") apiKey: String
-    ) : Call<MovieVideoResponse>
+    ) : MovieVideoResponse
 
     @GET("tv/{tv_id}/videos")
-    fun getTvVideos(
-        @Path("tv_id") tvId: Int,
+    suspend fun getTvVideos(
+        @Path("tv_id") tvId: Int?,
         @Query("api_key") apiKey: String
-    ) : Call<TvshowVideoResponse>
+    ) : TvshowVideoResponse
 }

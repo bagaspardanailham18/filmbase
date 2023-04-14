@@ -12,6 +12,9 @@ import com.bagas.project.filmbase.data.remote.ApiConfig
 import com.bagas.project.filmbase.data.repository.MovieRepository
 import com.bagas.project.filmbase.data.responses.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import com.bagas.project.filmbase.data.Result
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -21,17 +24,17 @@ import javax.inject.Inject
 @HiltViewModel
 class DetailViewModel @Inject constructor(private val movieRepository: MovieRepository) : ViewModel() {
 
-    private val _movieDetail = MutableLiveData<MovieDetailResponse?>()
-    val movieDetail: LiveData<MovieDetailResponse?> = _movieDetail
+    private val _movieDetail = MutableLiveData<Result<MovieDetailResponse?>>()
+    val movieDetail: LiveData<Result<MovieDetailResponse?>> = _movieDetail
 
-    private val _movieVideos = MutableLiveData<List<MovieVideoItem?>>()
-    val movieVideos: LiveData<List<MovieVideoItem?>> = _movieVideos
+    private val _movieVideos = MutableLiveData<Result<MovieVideoResponse?>>()
+    val movieVideos: LiveData<Result<MovieVideoResponse?>> = _movieVideos
 
-    private val _tvDetail = MutableLiveData<TvshowDetailResponse?>()
-    val tvDetail: LiveData<TvshowDetailResponse?> = _tvDetail
+    private val _tvDetail = MutableLiveData<Result<TvshowDetailResponse?>>()
+    val tvDetail: LiveData<Result<TvshowDetailResponse?>> = _tvDetail
 
-    private val _tvVideos = MutableLiveData<List<TvVideoItem?>>()
-    val tvVideos: LiveData<List<TvVideoItem?>> = _tvVideos
+    private val _tvVideos = MutableLiveData<Result<TvshowVideoResponse?>>()
+    val tvVideos: LiveData<Result<TvshowVideoResponse?>> = _tvVideos
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
@@ -40,100 +43,28 @@ class DetailViewModel @Inject constructor(private val movieRepository: MovieRepo
         const val TAG = "DetailViewModel"
     }
 
-    fun getMovieDetail(id: Int) {
-        _isLoading.value = true
-        val client = ApiConfig.getApiService().getMovieDetail(id, BuildConfig.API_KEY)
-        client.enqueue(object : Callback<MovieDetailResponse> {
-            override fun onResponse(
-                call: Call<MovieDetailResponse>,
-                response: Response<MovieDetailResponse>
-            ) {
-                if (response.isSuccessful) {
-                    _isLoading.value = false
-                    val responseBody = response.body()
-                    if (responseBody != null) {
-                        _movieDetail.postValue(responseBody)
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<MovieDetailResponse>, t: Throwable) {
-                Log.d(TAG, "message : ${t.message}")
-            }
-
-        })
+    suspend fun getMovieDetail(id: Int?) {
+        movieRepository.getMovieDetail(id).collectLatest {
+            _movieDetail.postValue(it)
+        }
     }
 
-    fun getMovieVideos(id: Int?) {
-        val client = ApiConfig.getApiService().getMovieVideos(id!!, BuildConfig.API_KEY)
-        client.enqueue(object : Callback<MovieVideoResponse> {
-            override fun onResponse(
-                call: Call<MovieVideoResponse>,
-                response: Response<MovieVideoResponse>
-            ) {
-                if (response.isSuccessful) {
-                    val responseBody = response.body()
-                    if (responseBody != null) {
-                        _movieVideos.postValue(responseBody.results!!)
-                    } else {
-                        Log.d(TAG, "message : ${response.message()}")
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<MovieVideoResponse>, t: Throwable) {
-                Log.d(TAG, "message : ${t.message}")
-            }
-
-        })
+    suspend fun getMovieVideos(id: Int?) {
+        movieRepository.getMovieVideos(id).collectLatest {
+            _movieVideos.postValue(it)
+        }
     }
 
-    fun getTvshowDetail(id: Int) {
-        _isLoading.value = true
-        val client = ApiConfig.getApiService().getTvDetail(id, BuildConfig.API_KEY)
-        client.enqueue(object : Callback<TvshowDetailResponse> {
-            override fun onResponse(
-                call: Call<TvshowDetailResponse>,
-                response: Response<TvshowDetailResponse>
-            ) {
-                if (response.isSuccessful) {
-                    _isLoading.value = false
-                    val responseBody = response.body()
-                    if (responseBody != null) {
-                        _tvDetail.postValue(responseBody)
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<TvshowDetailResponse>, t: Throwable) {
-                TODO("Not yet implemented")
-            }
-
-        })
+    suspend fun getTvshowDetail(id: Int?) {
+        movieRepository.getTvshowDetail(id).collectLatest {
+            _tvDetail.postValue(it)
+        }
     }
 
-    fun getTvVideos(id: Int?) {
-        val client = ApiConfig.getApiService().getTvVideos(id!!, BuildConfig.API_KEY)
-        client.enqueue(object : Callback<TvshowVideoResponse> {
-            override fun onResponse(
-                call: Call<TvshowVideoResponse>,
-                response: Response<TvshowVideoResponse>
-            ) {
-                if (response.isSuccessful) {
-                    val responseBody = response.body()
-                    if (responseBody != null) {
-                        _tvVideos.postValue(responseBody.results!!)
-                    } else {
-                        Log.d(TAG, "message : ${response.message()}")
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<TvshowVideoResponse>, t: Throwable) {
-                Log.d(TAG, "message : ${t.message}")
-            }
-
-        })
+    suspend fun getTvVideos(id: Int?) {
+        movieRepository.getTvshowVideos(id).collectLatest {
+            _tvVideos.postValue(it)
+        }
     }
 
     fun getFavoritedMovieById(id: Int?) = movieRepository.getFavoriteMovieById(id!!)

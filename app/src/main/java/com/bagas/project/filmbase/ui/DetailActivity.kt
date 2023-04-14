@@ -4,18 +4,22 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.WindowManager
 import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bagas.project.filmbase.BuildConfig
 import com.bagas.project.filmbase.R
 import com.bagas.project.filmbase.data.local.FavoriteMovieEntity
 import com.bagas.project.filmbase.data.local.FavoriteTvEntity
-import com.bagas.project.filmbase.data.responses.MovieProductionCompaniesItem
-import com.bagas.project.filmbase.data.responses.TvProductionCompaniesItem
+import com.bagas.project.filmbase.data.responses.*
 import com.bagas.project.filmbase.databinding.ActivityDetailBinding
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class DetailActivity : AppCompatActivity() {
@@ -28,6 +32,9 @@ class DetailActivity : AppCompatActivity() {
 //    private val detailViewModel: DetailViewModel by viewModels {
 //        factory
 //    }
+
+    private var movieId: Int? = null
+    private var tvshowId: Int? = null
 
     companion object {
         const val EXTRA_MOVIE_DETAIL = "extra_movie_detail"
@@ -45,94 +52,112 @@ class DetailActivity : AppCompatActivity() {
             onBackPressed()
         }
 
-        val movieData = intent.getIntExtra(EXTRA_MOVIE_DETAIL, 0)
-        val tvData = intent.getIntExtra(EXTRA_TV_DETAIL, 0)
+        movieId = intent.getIntExtra(EXTRA_MOVIE_DETAIL, 0)
+        tvshowId = intent.getIntExtra(EXTRA_TV_DETAIL, 0)
 
-        if (movieData != 0) {
-            populateMovieDetail(movieData)
+        if (movieId != 0) {
+            populateMovieDetail(movieId)
         } else {
-            populateTvDetail(tvData)
+            populateTvDetail(tvshowId)
         }
 
-//        binding.btnToggleFavorite.setOnClickListener {
-//            if (isChecked) {
-//                detailViewModel.deleteMovie(movie as MovieEntity)
-//            } else {
-//                detailViewModel.insertMovie(movie as MovieEntity)
-//            }
-//
-//        }
     }
 
-    private fun populateMovieDetail(data: Int) {
-        detailViewModel.getMovieDetail(data)
-        detailViewModel.movieDetail.observe(this) { data ->
-            detailViewModel.getMovieVideos(data?.id)
+    private fun populateMovieDetail(data: Int?) {
 
-            binding.tvDetailTitle.text = data?.title
-            binding.tvDetailDate.text = data?.releaseDate
+        lifecycleScope.launch {
+            detailViewModel.getMovieDetail(data)
+            detailViewModel.movieDetail.observe(this@DetailActivity) { data ->
+                when (data) {
+                    is com.bagas.project.filmbase.data.Result.Loading -> {
+                        Log.d("detail", "loading")
+                    }
+                    is com.bagas.project.filmbase.data.Result.Success -> {
+                        Log.d("detail", data.data.toString())
+                        binding.apply {
+                            tvDetailTitle.text = data.data?.title
+                            tvDetailDate.text = data.data?.releaseDate
 
-            if (data?.genres!!.isNotEmpty()) {
-                binding.tvDetailGenre.text = data.genres.get(0)?.name.toString()
-            } else {
-                binding.tvDetailGenre.text = "-"
-            }
+                            if (data.data?.genres!!.isNotEmpty()) {
+                                tvDetailGenre.text = data.data?.genres.get(0)?.name.toString()
+                            } else {
+                                tvDetailGenre.text = "-"
+                            }
 
-            binding.tvDetailFavorites.text = data.voteAverage?.toString()?.trim()
+                            tvDetailFavorites.text = data.data.voteAverage?.toString()?.trim()
+                            if (data.data.overview.equals("")) {
+                                binding.tvDetailOverview.text = "no overview"
+                            } else {
+                                binding.tvDetailOverview.text = data.data?.overview
+                            }
 
-            if (data.overview.equals("")) {
-                binding.tvDetailOverview.text = "no overview"
-            } else {
-                binding.tvDetailOverview.text = data.overview
-            }
+                            Glide.with(this@DetailActivity)
+                                .load(BuildConfig.IMAGE_URL + data.data.backdropPath)
+                                .into(binding.backdrop)
 
+                            Glide.with(this@DetailActivity)
+                                .load(BuildConfig.IMAGE_URL + data.data.posterPath)
+                                .into(binding.tvDetailPoster)
 
-            Glide.with(this)
-                .load(BuildConfig.IMAGE_URL + data.backdropPath)
-                .into(binding.backdrop)
+                            detailViewModel.getFavoritedMovieById(data.data.id).observe(this@DetailActivity) { favoritedData ->
+                                if (favoritedData != null) {
+                                    setFavoriteState(true)
+                                    binding.btnToggleFavorite.setOnClickListener { detailViewModel.deleteFavoritedMovie(favoritedData) }
+                                } else {
+                                    setFavoriteState(false)
+                                    val movie = FavoriteMovieEntity(
+                                        data.data.id,
+                                        data.data.title,
+                                        data.data.overview,
+                                        data.data.releaseDate,
+                                        data.data.voteAverage,
+                                        data.data.posterPath.toString(),
+                                        data.data.backdropPath
+                                    )
+                                    binding.btnToggleFavorite.setOnClickListener { detailViewModel.insertFavoritedMovie(movie) }
+                                }
+                            }
 
-            Glide.with(this)
-                .load(BuildConfig.IMAGE_URL + data.posterPath)
-                .into(binding.tvDetailPoster)
-
-            detailViewModel.movieVideos.observe(this) { video ->
-                binding.btnTrailer.setOnClickListener {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(BuildConfig.WATCH_YOUTUBE_URL + video[0]?.key))
-                    startActivity(intent)
+                            populateMovieProduction(data.data.productionCompanies)
+                        }
+                    }
+                    is com.bagas.project.filmbase.data.Result.Error -> {
+                        Log.d("detail", "error")
+                    }
                 }
             }
 
-            detailViewModel.getFavoritedMovieById(data.id).observe(this) { favoritedData ->
-                if (favoritedData != null) {
-                    setFavoriteState(true)
-                    binding.btnToggleFavorite.setOnClickListener { detailViewModel.deleteFavoritedMovie(favoritedData) }
-                } else {
-                    setFavoriteState(false)
-                    val movie = FavoriteMovieEntity(
-                        data.id,
-                        data.title,
-                        data.overview,
-                        data.releaseDate,
-                        data.voteAverage,
-                        data.posterPath.toString(),
-                        data.backdropPath
-                    )
-                    binding.btnToggleFavorite.setOnClickListener { detailViewModel.insertFavoritedMovie(movie) }
+            detailViewModel.getMovieVideos(data)
+            Log.d("movieId", data.toString())
+            detailViewModel.movieVideos.observe(this@DetailActivity) { video ->
+                when (video) {
+                    is com.bagas.project.filmbase.data.Result.Loading -> {
+                        Log.d("detail", "Videos : Loading")
+                    }
+                    is com.bagas.project.filmbase.data.Result.Success -> {
+                        Log.d("detail", "Videos : Success")
+                        binding.btnTrailer.setOnClickListener {
+                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(BuildConfig.WATCH_YOUTUBE_URL + video.data?.results?.get(0)?.key))
+                            startActivity(intent)
+                        }
+
+                        // Populate RV Videos
+                        populateMovieVideos(video.data?.results)
+                    }
+                    is com.bagas.project.filmbase.data.Result.Error -> {
+                        Log.d("detail", "Videos : Error")
+                    }
                 }
             }
-
-            populateMovieVideos()
-            populateMovieProduction(data.productionCompanies)
         }
+
     }
 
-    private fun populateMovieVideos() {
-        detailViewModel.movieVideos.observe(this) { videos ->
-            binding.rvVideos.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-            val adapter = VideosAdapter(videos, emptyList())
-            binding.rvVideos.adapter = adapter
-            binding.rvVideos.setHasFixedSize(true)
-        }
+    private fun populateMovieVideos(data: List<MovieVideoItem?>?) {
+        binding.rvVideos.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        val adapter = data?.let { VideosAdapter(it, emptyList()) }
+        binding.rvVideos.adapter = adapter
+        binding.rvVideos.setHasFixedSize(true)
     }
 
     private fun populateMovieProduction(data: List<MovieProductionCompaniesItem?>?) {
@@ -142,75 +167,98 @@ class DetailActivity : AppCompatActivity() {
         binding.rvProductions.setHasFixedSize(true)
     }
 
-    private fun populateTvDetail(data: Int) {
-        detailViewModel.getTvshowDetail(data)
-        detailViewModel.tvDetail.observe(this) { data ->
-            detailViewModel.getTvVideos(data?.id)
+    private fun populateTvDetail(data: Int?) {
+        lifecycleScope.launch {
+            detailViewModel.getTvshowDetail(data)
+            detailViewModel.tvDetail.observe(this@DetailActivity) { data ->
+                when (data) {
+                    is com.bagas.project.filmbase.data.Result.Loading -> {
 
-            binding.tvDetailTitle.text = data?.name
-            binding.tvDetailDate.text = data?.firstAirDate
+                    }
+                    is com.bagas.project.filmbase.data.Result.Success -> {
+                        binding.apply {
+                            tvDetailTitle.text = data.data?.name
+                            tvDetailDate.text = data.data?.firstAirDate
 
-            if (data?.genres!!.isNotEmpty()) {
-                binding.tvDetailGenre.text = data.genres.get(0)?.name.toString()
-            } else {
-                binding.tvDetailGenre.text = "-"
-            }
+                            if (data.data?.genres!!.isNotEmpty()) {
+                                tvDetailGenre.text = data.data.genres[0]?.name.toString()
+                            } else {
+                                tvDetailGenre.text = "-"
+                            }
 
-            binding.tvDetailFavorites.text = data.voteAverage?.toString()?.trim()
+                            tvDetailFavorites.text = data.data.voteAverage?.toString()?.trim()
 
-            if (!data.overview.equals("")) {
-                binding.tvDetailOverview.text = data.overview
-            } else {
-                binding.tvDetailOverview.text = "No Overview"
-            }
+                            if (!data.data.overview.equals("")) {
+                                tvDetailOverview.text = data.data.overview
+                            } else {
+                                tvDetailOverview.text = "No Overview"
+                            }
 
-            Glide.with(this)
-                .load(BuildConfig.IMAGE_URL + data.backdropPath)
-                .error(R.drawable.image_load_error)
-                .placeholder(R.drawable.image_loading_placeholder)
-                .into(binding.backdrop)
+                            Glide.with(this@DetailActivity)
+                                .load(BuildConfig.IMAGE_URL + data.data.backdropPath)
+                                .error(R.drawable.image_load_error)
+                                .placeholder(R.drawable.image_loading_placeholder)
+                                .into(backdrop)
 
-            Glide.with(this)
-                .load(BuildConfig.IMAGE_URL + data.posterPath)
-                .error(R.drawable.image_load_error)
-                .placeholder(R.drawable.image_loading_placeholder)
-                .into(binding.tvDetailPoster)
+                            Glide.with(this@DetailActivity)
+                                .load(BuildConfig.IMAGE_URL + data.data.posterPath)
+                                .error(R.drawable.image_load_error)
+                                .placeholder(R.drawable.image_loading_placeholder)
+                                .into(tvDetailPoster)
 
-            detailViewModel.tvVideos.observe(this) { video ->
-                binding.btnTrailer.setOnClickListener {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(BuildConfig.WATCH_YOUTUBE_URL + video[0]?.key))
-                    startActivity(intent)
+                            detailViewModel.getFavoritedTvById(data.data.id).observe(this@DetailActivity) { favoritedData ->
+                                if (favoritedData != null) {
+                                    setFavoriteState(true)
+                                    btnToggleFavorite.setOnClickListener { detailViewModel.deleteFavoritedTv(favoritedData) }
+                                } else {
+                                    setFavoriteState(false)
+                                    val tv = FavoriteTvEntity(
+                                        data.data.id!!,
+                                        data.data.name,
+                                        data.data.overview,
+                                        data.data.firstAirDate,
+                                        data.data.voteAverage,
+                                        data.data.posterPath,
+                                        data.data.backdropPath
+                                    )
+                                    btnToggleFavorite.setOnClickListener { detailViewModel.insertFavoritedTv(tv) }
+                                }
+                            }
+                            populateTvProduction(data.data.productionCompanies)
+                        }
+                    }
+                    is com.bagas.project.filmbase.data.Result.Error -> {
+
+                    }
                 }
             }
 
-            detailViewModel.getFavoritedTvById(data.id).observe(this) { favoritedData ->
-                if (favoritedData != null) {
-                    setFavoriteState(true)
-                    binding.btnToggleFavorite.setOnClickListener { detailViewModel.deleteFavoritedTv(favoritedData) }
-                } else {
-                    setFavoriteState(false)
-                    val tv = FavoriteTvEntity(
-                        data.id!!,
-                        data.name,
-                        data.overview,
-                        data.firstAirDate,
-                        data.voteAverage,
-                        data.posterPath,
-                        data.backdropPath
-                    )
-                    binding.btnToggleFavorite.setOnClickListener { detailViewModel.insertFavoritedTv(tv) }
+            detailViewModel.getTvVideos(data)
+            detailViewModel.tvVideos.observe(this@DetailActivity) { video ->
+                when (video) {
+                    is com.bagas.project.filmbase.data.Result.Loading -> {
+
+                    }
+                    is com.bagas.project.filmbase.data.Result.Success -> {
+                        binding.btnTrailer.setOnClickListener {
+                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(BuildConfig.WATCH_YOUTUBE_URL + video.data?.results?.get(0)?.key))
+                            startActivity(intent)
+                        }
+
+                        populateTvVideos(video.data?.results!!)
+                    }
+                    is com.bagas.project.filmbase.data.Result.Error -> {
+
+                    }
                 }
             }
-
-            populateTvVideos()
-            populateTvProduction(data.productionCompanies)
         }
     }
 
-    private fun populateTvVideos() {
+    private fun populateTvVideos(data: List<TvVideoItem?>) {
         detailViewModel.tvVideos.observe(this) { videos ->
             binding.rvVideos.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-            val adapter = VideosAdapter(emptyList(), videos)
+            val adapter = VideosAdapter(emptyList(), data)
             binding.rvVideos.adapter = adapter
             binding.rvVideos.setHasFixedSize(true)
         }
