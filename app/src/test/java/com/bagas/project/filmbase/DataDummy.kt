@@ -1,6 +1,6 @@
 package com.bagas.project.filmbase
 
-import com.bagas.project.filmbase.data.local.*
+import com.bagas.project.filmbase.data.local.entities.*
 import com.bagas.project.filmbase.data.responses.*
 
 object DataDummy {

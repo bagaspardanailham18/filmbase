@@ -1,7 +1,11 @@
-package com.bagas.project.filmbase.data.local
+package com.bagas.project.filmbase.data.local.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.bagas.project.filmbase.data.local.entities.FavoriteMovieEntity
+import com.bagas.project.filmbase.data.local.entities.TopRatedMovieEntity
+import com.bagas.project.filmbase.data.local.entities.TrendingMovieEntity
+import com.bagas.project.filmbase.data.local.entities.UpcomingMovieEntity
 
 @Dao
 interface MovieDao {

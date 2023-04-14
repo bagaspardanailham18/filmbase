@@ -4,13 +4,13 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import com.bagas.project.filmbase.DataDummy
 import com.bagas.project.filmbase.MainDispatcherRule
-import com.bagas.project.filmbase.data.local.TrendingMovieEntity
-import com.bagas.project.filmbase.data.repository.MovieRepository
+import com.bagas.project.filmbase.data.local.entities.TrendingMovieEntity
+import com.bagas.project.filmbase.data.repository.MovieRepositoryImpl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.*
 import com.bagas.project.filmbase.data.Result
-import com.bagas.project.filmbase.data.local.TrendingTvshowEntity
+import com.bagas.project.filmbase.data.local.entities.TrendingTvshowEntity
 import com.bagas.project.filmbase.getOrAwaitValue
 import org.junit.Before
 import org.junit.Rule
@@ -32,13 +32,13 @@ class SearchViewModelTest {
     var mainDispatcherRule = MainDispatcherRule()
 
     @Mock
-    private lateinit var movieRepository: MovieRepository
+    private lateinit var movieRepositoryImpl: MovieRepositoryImpl
 
     private lateinit var searchViewModel: SearchViewModel
 
     @Before
     fun setUp() {
-        searchViewModel = SearchViewModel(movieRepository)
+        searchViewModel = SearchViewModel(movieRepositoryImpl)
     }
 
     @Test
@@ -47,10 +47,10 @@ class SearchViewModelTest {
         val expectedData = MutableLiveData<Result<List<TrendingMovieEntity>>>()
         expectedData.value = Result.Success(dummyTrendingMovies)
 
-        `when`(movieRepository.getTrendingMovies()).thenReturn(expectedData)
+        `when`(movieRepositoryImpl.getTrendingMovies()).thenReturn(expectedData)
         val actual = searchViewModel.getTrendingMovies().getOrAwaitValue()
 
-        verify(movieRepository).getTrendingMovies()
+        verify(movieRepositoryImpl).getTrendingMovies()
         assertNotNull(actual)
         assertTrue(actual is Result.Success)
         assertEquals(dummyTrendingMovies.size, (actual as Result.Success).data.size)
@@ -63,10 +63,10 @@ class SearchViewModelTest {
         val expectedData = MutableLiveData<Result<List<TrendingTvshowEntity>>>()
         expectedData.value = Result.Success(dummyTrendingTv)
 
-        `when`(movieRepository.getTrendingTvshows()).thenReturn(expectedData)
+        `when`(movieRepositoryImpl.getTrendingTvshows()).thenReturn(expectedData)
         val actual = searchViewModel.getTrendingTvshow().getOrAwaitValue()
 
-        verify(movieRepository).getTrendingTvshows()
+        verify(movieRepositoryImpl).getTrendingTvshows()
         assertNotNull(actual)
         assertTrue(actual is Result.Success)
         assertEquals(dummyTrendingTv.size, (actual as Result.Success).data.size)

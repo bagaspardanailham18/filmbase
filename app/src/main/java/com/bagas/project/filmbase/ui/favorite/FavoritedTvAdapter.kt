@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bagas.project.filmbase.BuildConfig
-import com.bagas.project.filmbase.data.local.FavoriteTvEntity
+import com.bagas.project.filmbase.data.local.entities.FavoriteTvEntity
 import com.bagas.project.filmbase.databinding.ItemRowTrendingBinding
 import com.bagas.project.filmbase.ui.DetailActivity
 import com.bumptech.glide.Glide

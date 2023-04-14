@@ -1,7 +1,6 @@
 package com.bagas.project.filmbase.ui.home.movie
 
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -9,7 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bagas.project.filmbase.BuildConfig
 import com.bagas.project.filmbase.R
-import com.bagas.project.filmbase.data.local.UpcomingMovieEntity
+import com.bagas.project.filmbase.data.local.entities.UpcomingMovieEntity
 import com.bagas.project.filmbase.data.responses.UpcomingMoviesItem
 import com.bagas.project.filmbase.databinding.ItemRowUpcomingBinding
 import com.bagas.project.filmbase.ui.DetailActivity

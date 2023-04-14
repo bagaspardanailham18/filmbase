@@ -11,14 +11,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bagas.project.filmbase.BuildConfig
 import com.bagas.project.filmbase.R
-import com.bagas.project.filmbase.data.local.FavoriteMovieEntity
-import com.bagas.project.filmbase.data.local.FavoriteTvEntity
+import com.bagas.project.filmbase.data.local.entities.FavoriteMovieEntity
+import com.bagas.project.filmbase.data.local.entities.FavoriteTvEntity
 import com.bagas.project.filmbase.data.responses.*
 import com.bagas.project.filmbase.databinding.ActivityDetailBinding
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint

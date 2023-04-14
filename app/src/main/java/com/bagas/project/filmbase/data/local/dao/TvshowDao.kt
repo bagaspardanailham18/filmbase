@@ -1,7 +1,11 @@
-package com.bagas.project.filmbase.data.local
+package com.bagas.project.filmbase.data.local.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.bagas.project.filmbase.data.local.entities.AiringTodayTvEntity
+import com.bagas.project.filmbase.data.local.entities.FavoriteTvEntity
+import com.bagas.project.filmbase.data.local.entities.TopRatedTvEntity
+import com.bagas.project.filmbase.data.local.entities.TrendingTvshowEntity
 
 @Dao
 interface TvshowDao {

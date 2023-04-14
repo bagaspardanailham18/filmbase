@@ -1,4 +1,4 @@
-package com.bagas.project.filmbase.data.local
+package com.bagas.project.filmbase.data.local.entities
 
 import android.os.Parcelable
 import androidx.annotation.NonNull

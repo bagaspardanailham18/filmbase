@@ -4,12 +4,12 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import com.bagas.project.filmbase.DataDummy
 import com.bagas.project.filmbase.MainDispatcherRule
-import com.bagas.project.filmbase.data.repository.MovieRepository
+import com.bagas.project.filmbase.data.repository.MovieRepositoryImpl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Assert.*
 import com.bagas.project.filmbase.data.Result
-import com.bagas.project.filmbase.data.local.AiringTodayTvEntity
-import com.bagas.project.filmbase.data.local.TopRatedTvEntity
+import com.bagas.project.filmbase.data.local.entities.AiringTodayTvEntity
+import com.bagas.project.filmbase.data.local.entities.TopRatedTvEntity
 import com.bagas.project.filmbase.getOrAwaitValue
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -32,13 +32,13 @@ class TvshowViewModelTest {
     var mainDispatcherRule = MainDispatcherRule()
 
     @Mock
-    private lateinit var movieRepository: MovieRepository
+    private lateinit var movieRepositoryImpl: MovieRepositoryImpl
 
     private lateinit var tvshowViewModel: TvshowViewModel
 
     @Before
     fun setUp() {
-        tvshowViewModel = TvshowViewModel(movieRepository)
+        tvshowViewModel = TvshowViewModel(movieRepositoryImpl)
     }
 
     @Test
@@ -46,11 +46,11 @@ class TvshowViewModelTest {
         val expectedData = MutableLiveData<Result<List<AiringTodayTvEntity>>>()
         expectedData.value = Result.Success(DataDummy.generateAiringTodayTvshow())
 
-        `when`(movieRepository.getAiringTodayTv()).thenReturn(expectedData)
+        `when`(movieRepositoryImpl.getAiringTodayTv()).thenReturn(expectedData)
 
         val actual = tvshowViewModel.getAiringTodayTvshow().getOrAwaitValue()
 
-        verify(movieRepository).getAiringTodayTv()
+        verify(movieRepositoryImpl).getAiringTodayTv()
         assertNotNull(actual)
         assertEquals(DataDummy.generateAiringTodayTvshow().size, (actual as Result.Success).data.size)
     }
@@ -60,11 +60,11 @@ class TvshowViewModelTest {
         val expectedData = MutableLiveData<Result<List<TopRatedTvEntity>>>()
         expectedData.value = Result.Success(DataDummy.generateTopRatedTvshow())
 
-        `when`(movieRepository.getTopRatedTvshow()).thenReturn(expectedData)
+        `when`(movieRepositoryImpl.getTopRatedTvshow()).thenReturn(expectedData)
 
         val actual = tvshowViewModel.getTopRatedTvshow().getOrAwaitValue()
 
-        verify(movieRepository).getTopRatedTvshow()
+        verify(movieRepositoryImpl).getTopRatedTvshow()
         assertNotNull(actual)
         assertEquals(DataDummy.generateTopRatedTvshow().size, (actual as Result.Success).data.size)
     }

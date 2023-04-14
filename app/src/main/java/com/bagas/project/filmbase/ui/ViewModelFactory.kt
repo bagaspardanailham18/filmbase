@@ -1,17 +1,9 @@
 package com.bagas.project.filmbase.ui
 
-import android.app.Application
-import android.content.Context
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.bagas.project.filmbase.data.repository.MovieRepository
-import com.bagas.project.filmbase.di.Injection
-import com.bagas.project.filmbase.ui.favorite.FavoriteViewModel
-import com.bagas.project.filmbase.ui.home.movie.MovieViewModel
-import com.bagas.project.filmbase.ui.home.tvshow.TvshowViewModel
-import com.bagas.project.filmbase.ui.search.SearchViewModel
+import com.bagas.project.filmbase.data.repository.MovieRepositoryImpl
 
-class ViewModelFactory private constructor(private val movieRepository: MovieRepository): ViewModelProvider.NewInstanceFactory() {
+class ViewModelFactory private constructor(private val movieRepositoryImpl: MovieRepositoryImpl): ViewModelProvider.NewInstanceFactory() {
 
 //    companion object {
 //        @Volatile

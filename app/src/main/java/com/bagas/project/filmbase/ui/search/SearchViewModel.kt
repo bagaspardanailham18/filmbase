@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.bagas.project.filmbase.BuildConfig
 import com.bagas.project.filmbase.data.remote.ApiConfig
 import com.bagas.project.filmbase.data.repository.MovieRepository
+import com.bagas.project.filmbase.data.repository.MovieRepositoryImpl
 import com.bagas.project.filmbase.data.responses.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import retrofit2.Call

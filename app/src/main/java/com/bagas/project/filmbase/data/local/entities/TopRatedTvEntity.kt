@@ -1,4 +1,4 @@
-package com.bagas.project.filmbase.data.local
+package com.bagas.project.filmbase.data.local.entities
 
 import androidx.annotation.NonNull
 import androidx.room.ColumnInfo

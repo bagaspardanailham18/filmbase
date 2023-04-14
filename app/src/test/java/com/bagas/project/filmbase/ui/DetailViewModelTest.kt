@@ -2,19 +2,14 @@ package com.bagas.project.filmbase.ui
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
-import com.bagas.project.filmbase.BuildConfig
 import com.bagas.project.filmbase.DataDummy
 import com.bagas.project.filmbase.MainDispatcherRule
-import com.bagas.project.filmbase.data.repository.MovieRepository
-import com.bagas.project.filmbase.data.responses.MovieDetailResponse
+import com.bagas.project.filmbase.data.repository.MovieRepositoryImpl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.*
-import com.bagas.project.filmbase.data.Result
-import com.bagas.project.filmbase.data.local.FavoriteMovieEntity
-import com.bagas.project.filmbase.data.local.FavoriteTvEntity
-import com.bagas.project.filmbase.data.remote.ApiService
-import com.bagas.project.filmbase.getOrAwaitValue
+import com.bagas.project.filmbase.data.local.entities.FavoriteMovieEntity
+import com.bagas.project.filmbase.data.local.entities.FavoriteTvEntity
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -35,13 +30,13 @@ class DetailViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     @Mock
-    private lateinit var movieRepository: MovieRepository
+    private lateinit var movieRepositoryImpl: MovieRepositoryImpl
 
     private lateinit var detailViewModel: DetailViewModel
 
     @Before
     fun setUp() {
-        detailViewModel = DetailViewModel(movieRepository)
+        detailViewModel = DetailViewModel(movieRepositoryImpl)
     }
 
     @Test
@@ -74,10 +69,10 @@ class DetailViewModelTest {
         val expectedData = MutableLiveData<FavoriteMovieEntity>()
         expectedData.value = dummyData
 
-        `when`(movieRepository.getFavoriteMovieById(1)).thenReturn(expectedData)
+        `when`(movieRepositoryImpl.getFavoriteMovieById(1)).thenReturn(expectedData)
         val actual = detailViewModel.getFavoritedMovieById(1)
 
-        verify(movieRepository).getFavoriteMovieById(1)
+        verify(movieRepositoryImpl).getFavoriteMovieById(1)
         assertNotNull(actual)
         assertEquals(dummyData.title, actual.value?.title)
     }
@@ -88,10 +83,10 @@ class DetailViewModelTest {
         val expectedData = MutableLiveData<FavoriteTvEntity>()
         expectedData.value = dummyData
 
-        `when`(movieRepository.getFavoriteTvById(1)).thenReturn(expectedData)
+        `when`(movieRepositoryImpl.getFavoriteTvById(1)).thenReturn(expectedData)
         val actual = detailViewModel.getFavoritedTvById(1)
 
-        verify(movieRepository).getFavoriteTvById(1)
+        verify(movieRepositoryImpl).getFavoriteTvById(1)
         assertNotNull(actual)
         assertEquals(dummyData.name, actual.value?.name)
     }
@@ -99,40 +94,40 @@ class DetailViewModelTest {
     @Test
     fun `insert Favorited Movie`() = runTest {
         val dummyData = DataDummy.generateFavoriteMovieByIdEntity()
-        `when`(movieRepository.insertFavoriteMovie(dummyData))
+        `when`(movieRepositoryImpl.insertFavoriteMovie(dummyData))
 
         val actual = detailViewModel.insertFavoritedMovie(dummyData)
-        verify(movieRepository).insertFavoriteMovie(dummyData)
+        verify(movieRepositoryImpl).insertFavoriteMovie(dummyData)
         assertNotNull(actual)
     }
 
     @Test
     fun `insert Favorited Tv`() = runTest {
         val dummyData = DataDummy.generateFavoriteTvByIdEntity()
-        `when`(movieRepository.insertFavoriteTvshow(dummyData))
+        `when`(movieRepositoryImpl.insertFavoriteTvshow(dummyData))
 
         val actual = detailViewModel.insertFavoritedTv(dummyData)
-        verify(movieRepository).insertFavoriteTvshow(dummyData)
+        verify(movieRepositoryImpl).insertFavoriteTvshow(dummyData)
         assertNotNull(actual)
     }
 
     @Test
     fun `delete Favorited Movie`() = runTest {
         val dummyData = DataDummy.generateFavoriteMovieByIdEntity()
-        `when`(movieRepository.deleteFavoriteMovie(dummyData))
+        `when`(movieRepositoryImpl.deleteFavoriteMovie(dummyData))
 
         val actual = detailViewModel.deleteFavoritedMovie(dummyData)
-        verify(movieRepository).deleteFavoriteMovie(dummyData)
+        verify(movieRepositoryImpl).deleteFavoriteMovie(dummyData)
         assertNotNull(actual)
     }
 
     @Test
     fun `delete Favorited Tv`() = runTest {
         val dummyData = DataDummy.generateFavoriteTvByIdEntity()
-        `when`(movieRepository.deleteFavoriteTvshow(dummyData))
+        `when`(movieRepositoryImpl.deleteFavoriteTvshow(dummyData))
 
         val actual = detailViewModel.deleteFavoritedTv(dummyData)
-        verify(movieRepository).deleteFavoriteTvshow(dummyData)
+        verify(movieRepositoryImpl).deleteFavoriteTvshow(dummyData)
         assertNotNull(actual)
     }
 

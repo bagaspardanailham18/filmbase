@@ -6,49 +6,30 @@ import androidx.lifecycle.liveData
 import androidx.lifecycle.map
 import com.bagas.project.filmbase.BuildConfig
 import com.bagas.project.filmbase.data.Result
-import com.bagas.project.filmbase.data.local.UpcomingMovieEntity
-import com.bagas.project.filmbase.data.responses.UpcomingMoviesItem
+import com.bagas.project.filmbase.data.local.entities.*
+import com.bagas.project.filmbase.data.responses.MovieDetailResponse
+import com.bagas.project.filmbase.data.responses.MovieVideoResponse
+import com.bagas.project.filmbase.data.responses.TvshowDetailResponse
+import com.bagas.project.filmbase.data.responses.TvshowVideoResponse
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import retrofit2.HttpException
 
-class RemoteDataSource private constructor(private val apiService: ApiService) {
+interface RemoteDataSource {
 
-    companion object {
-        @Volatile
-        private var instance: RemoteDataSource? = null
+    fun getUpcomingMovies(): LiveData<Result<List<UpcomingMovieEntity>>>
 
-        fun getInstance(apiService: ApiService): RemoteDataSource =
-            instance ?: synchronized(this) {
-                instance ?: RemoteDataSource(apiService).apply {
-                    instance = this
-                }
-            }
-    }
+    fun getTopRatedMovies(): LiveData<Result<List<TopRatedMovieEntity>>>
+    suspend fun getMovieDetail(movieId: Int?): Flow<Result<MovieDetailResponse>>
+    suspend fun getTvshowDetail(tvshowId: Int?): Flow<Result<TvshowDetailResponse>>
 
-//    fun getUpcomingMovies(): LiveData<Result<List<UpcomingMovieEntity>>> = liveData {
-//        emit(Result.Loading)
-//        try {
-//            val response = apiService.getUpcomingMovies(BuildConfig.API_KEY, 1)
-//            val upcomingMovies = response.results
-//            val upcomingMovieList = upcomingMovies.map { data ->
-//                UpcomingMovieEntity(
-//                    data!!.id,
-//                    data.title,
-//                    data.overview,
-//                    data.releaseDate,
-//                    data.voteAverage,
-//                    data.posterPath,
-//                    data.backdropPath
-//                )
-//            }
-//            movieDao.deleteAllUpcomingMovie()
-//            movieDao.insertUpcomingMovies(upcomingMovieList)
-//        } catch (e: Exception) {
-//            Log.d("MovieRepository", "getUpcomingMovies : ${e.message.toString()}")
-//            emit(Result.Error(e.message.toString()))
-//        }
-//        val localData: LiveData<Result<List<UpcomingMovieEntity>>> = movieDao.getUpcomingMovies().map {
-//            Result.Success(it)
-//        }
-//        emitSource(localData)
-//    }
+    suspend fun getMovieVideos(movieId: Int?): Flow<Result<MovieVideoResponse>>
 
+    suspend fun getTvshowVideos(tvshowId: Int?): Flow<Result<TvshowVideoResponse>>
+
+    fun getAiringTodayTv(): LiveData<Result<List<AiringTodayTvEntity>>>
+
+    fun getTopRatedTvshow(): LiveData<Result<List<TopRatedTvEntity>>>
+    fun getTrendingMovies(): LiveData<Result<List<TrendingMovieEntity>>>
+    fun getTrendingTvshows(): LiveData<Result<List<TrendingTvshowEntity>>>
 }

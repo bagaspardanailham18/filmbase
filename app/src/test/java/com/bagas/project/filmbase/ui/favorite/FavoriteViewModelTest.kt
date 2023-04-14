@@ -4,9 +4,9 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import com.bagas.project.filmbase.DataDummy
 import com.bagas.project.filmbase.MainDispatcherRule
-import com.bagas.project.filmbase.data.local.FavoriteMovieEntity
-import com.bagas.project.filmbase.data.local.FavoriteTvEntity
-import com.bagas.project.filmbase.data.repository.MovieRepository
+import com.bagas.project.filmbase.data.local.entities.FavoriteMovieEntity
+import com.bagas.project.filmbase.data.local.entities.FavoriteTvEntity
+import com.bagas.project.filmbase.data.repository.MovieRepositoryImpl
 import com.bagas.project.filmbase.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -31,13 +31,13 @@ class FavoriteViewModelTest {
     var mainDispatcherRule = MainDispatcherRule()
 
     @Mock
-    private lateinit var movieRepository: MovieRepository
+    private lateinit var movieRepositoryImpl: MovieRepositoryImpl
 
     private lateinit var favoriteViewModel: FavoriteViewModel
 
     @Before
     fun setUp() {
-        favoriteViewModel = FavoriteViewModel(movieRepository)
+        favoriteViewModel = FavoriteViewModel(movieRepositoryImpl)
     }
 
     @Test
@@ -45,10 +45,10 @@ class FavoriteViewModelTest {
         var expectedTvhows = MutableLiveData<List<FavoriteTvEntity>>()
         expectedTvhows.value = DataDummy.generateFavoriteTvEntity()
 
-        `when`(movieRepository.getFavoriteTvshows()).thenReturn(expectedTvhows)
+        `when`(movieRepositoryImpl.getFavoriteTvshows()).thenReturn(expectedTvhows)
         val actual = favoriteViewModel.getFavoriteTvshows().getOrAwaitValue()
 
-        verify(movieRepository).getFavoriteTvshows()
+        verify(movieRepositoryImpl).getFavoriteTvshows()
         assertNotNull(actual)
         assertEquals(expectedTvhows.value, actual)
         assertEquals(expectedTvhows.value!!.size, actual.size)
@@ -60,10 +60,10 @@ class FavoriteViewModelTest {
         var expectedMovies = MutableLiveData<List<FavoriteMovieEntity>>()
         expectedMovies.value = DataDummy.generateFavoriteMovieEntity()
 
-        `when`(movieRepository.getFavoriteMovies()).thenReturn(expectedMovies)
+        `when`(movieRepositoryImpl.getFavoriteMovies()).thenReturn(expectedMovies)
         val actual = favoriteViewModel.getFavoriteMovies().getOrAwaitValue()
 
-        verify(movieRepository).getFavoriteMovies()
+        verify(movieRepositoryImpl).getFavoriteMovies()
         assertNotNull(actual)
         assertEquals(expectedMovies.value, actual)
         assertEquals(expectedMovies.value!!.size, actual.size)
@@ -75,10 +75,10 @@ class FavoriteViewModelTest {
         var expectedTvhows = MutableLiveData<List<FavoriteTvEntity>>()
         expectedTvhows.value = DataDummy.generateFavoriteTvEntity()
 
-        `when`(movieRepository.getFavoriteTvByQuery("query")).thenReturn(expectedTvhows)
+        `when`(movieRepositoryImpl.getFavoriteTvByQuery("query")).thenReturn(expectedTvhows)
         val actual = favoriteViewModel.getFavoriteTvByQuery("query").getOrAwaitValue()
 
-        verify(movieRepository).getFavoriteTvByQuery("query")
+        verify(movieRepositoryImpl).getFavoriteTvByQuery("query")
         assertNotNull(actual)
         assertEquals(expectedTvhows.value, actual)
         assertEquals(expectedTvhows.value!!.size, actual.size)
@@ -90,10 +90,10 @@ class FavoriteViewModelTest {
         var expectedMovies = MutableLiveData<List<FavoriteMovieEntity>>()
         expectedMovies.value = DataDummy.generateFavoriteMovieEntity()
 
-        `when`(movieRepository.getFavoriteMoviesByQuery("query")).thenReturn(expectedMovies)
+        `when`(movieRepositoryImpl.getFavoriteMoviesByQuery("query")).thenReturn(expectedMovies)
         val actual = favoriteViewModel.getFavoriteMoviesByQuery("query").getOrAwaitValue()
 
-        verify(movieRepository).getFavoriteMoviesByQuery("query")
+        verify(movieRepositoryImpl).getFavoriteMoviesByQuery("query")
         assertNotNull(actual)
         assertEquals(expectedMovies.value, actual)
         assertEquals(expectedMovies.value!!.size, actual.size)

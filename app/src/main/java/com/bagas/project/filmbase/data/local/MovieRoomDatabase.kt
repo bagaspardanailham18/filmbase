@@ -4,6 +4,9 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.bagas.project.filmbase.data.local.dao.MovieDao
+import com.bagas.project.filmbase.data.local.dao.TvshowDao
+import com.bagas.project.filmbase.data.local.entities.*
 
 @Database(entities = [UpcomingMovieEntity::class, TopRatedMovieEntity::class, AiringTodayTvEntity::class, TopRatedTvEntity::class, TrendingMovieEntity::class, TrendingTvshowEntity::class, FavoriteMovieEntity::class, FavoriteTvEntity::class], version = 1)
 abstract class MovieRoomDatabase: RoomDatabase() {

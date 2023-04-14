@@ -7,9 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bagas.project.filmbase.BuildConfig
-import com.bagas.project.filmbase.data.local.TrendingMovieEntity
-import com.bagas.project.filmbase.data.responses.TrendingMoviesItem
-import com.bagas.project.filmbase.data.responses.TrendingTvshowItem
+import com.bagas.project.filmbase.data.local.entities.TrendingMovieEntity
 import com.bagas.project.filmbase.databinding.ItemRowTrendingBinding
 import com.bagas.project.filmbase.ui.DetailActivity
 import com.bumptech.glide.Glide

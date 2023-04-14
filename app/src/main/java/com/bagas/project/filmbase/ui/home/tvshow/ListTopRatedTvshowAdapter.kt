@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bagas.project.filmbase.BuildConfig
 import com.bagas.project.filmbase.R
-import com.bagas.project.filmbase.data.local.TopRatedTvEntity
+import com.bagas.project.filmbase.data.local.entities.TopRatedTvEntity
 import com.bagas.project.filmbase.data.responses.TopRatedTvshowItem
 import com.bagas.project.filmbase.databinding.ItemRowTopRatedBinding
 import com.bagas.project.filmbase.ui.DetailActivity

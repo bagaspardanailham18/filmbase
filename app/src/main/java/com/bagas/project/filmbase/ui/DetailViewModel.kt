@@ -1,28 +1,23 @@
 package com.bagas.project.filmbase.ui
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bagas.project.filmbase.BuildConfig
-import com.bagas.project.filmbase.data.local.FavoriteMovieEntity
-import com.bagas.project.filmbase.data.local.FavoriteTvEntity
-import com.bagas.project.filmbase.data.remote.ApiConfig
-import com.bagas.project.filmbase.data.repository.MovieRepository
+import com.bagas.project.filmbase.data.local.entities.FavoriteMovieEntity
+import com.bagas.project.filmbase.data.local.entities.FavoriteTvEntity
+import com.bagas.project.filmbase.data.repository.MovieRepositoryImpl
 import com.bagas.project.filmbase.data.responses.*
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import com.bagas.project.filmbase.data.Result
+import com.bagas.project.filmbase.data.repository.LocalRepository
+import com.bagas.project.filmbase.data.repository.MovieRepository
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
-class DetailViewModel @Inject constructor(private val movieRepository: MovieRepository) : ViewModel() {
+class DetailViewModel @Inject constructor(private val movieRepository: MovieRepository, private val localRepository: LocalRepository) : ViewModel() {
 
     private val _movieDetail = MutableLiveData<Result<MovieDetailResponse?>>()
     val movieDetail: LiveData<Result<MovieDetailResponse?>> = _movieDetail
@@ -67,31 +62,31 @@ class DetailViewModel @Inject constructor(private val movieRepository: MovieRepo
         }
     }
 
-    fun getFavoritedMovieById(id: Int?) = movieRepository.getFavoriteMovieById(id!!)
+    fun getFavoritedMovieById(id: Int?) = localRepository.getFavoriteMovieById(id!!)
 
     fun insertFavoritedMovie(movie: FavoriteMovieEntity?) {
         viewModelScope.launch {
-            movieRepository.insertFavoriteMovie(movie!!)
+            localRepository.insertFavoriteMovie(movie!!)
         }
     }
 
     fun deleteFavoritedMovie(movie: FavoriteMovieEntity?) {
         viewModelScope.launch {
-            movieRepository.deleteFavoriteMovie(movie!!)
+            localRepository.deleteFavoriteMovie(movie!!)
         }
     }
 
-    fun getFavoritedTvById(id: Int?) = movieRepository.getFavoriteTvById(id!!)
+    fun getFavoritedTvById(id: Int?) = localRepository.getFavoriteTvById(id!!)
 
     fun insertFavoritedTv(tv: FavoriteTvEntity?) {
         viewModelScope.launch {
-            movieRepository.insertFavoriteTvshow(tv!!)
+            localRepository.insertFavoriteTvshow(tv!!)
         }
     }
 
     fun deleteFavoritedTv(tv: FavoriteTvEntity?) {
         viewModelScope.launch {
-            movieRepository.deleteFavoriteTvshow(tv!!)
+            localRepository.deleteFavoriteTvshow(tv!!)
         }
     }
 

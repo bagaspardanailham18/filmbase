@@ -1,12 +1,14 @@
-package com.bagas.project.filmbase.data.local
+package com.bagas.project.filmbase.data.local.entities
 
+import android.os.Parcelable
 import androidx.annotation.NonNull
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 
-@Entity(tableName = "favorite_movie_entities")
-data class FavoriteMovieEntity(
+@Entity(tableName = "trending_movie_entities")
+data class TrendingMovieEntity(
 
     @PrimaryKey
     @NonNull

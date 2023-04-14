@@ -7,12 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import com.bagas.project.filmbase.R
-import com.bagas.project.filmbase.data.local.FavoriteMovieEntity
-import com.bagas.project.filmbase.data.local.FavoriteTvEntity
+import com.bagas.project.filmbase.data.local.entities.FavoriteTvEntity
 import com.bagas.project.filmbase.databinding.FragmentFavoriteTvshowsBinding
-import com.bagas.project.filmbase.ui.ViewModelFactory
-import com.bagas.project.filmbase.ui.home.tvshow.TvshowViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

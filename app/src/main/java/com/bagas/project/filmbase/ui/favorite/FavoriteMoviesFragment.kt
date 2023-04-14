@@ -5,15 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import com.bagas.project.filmbase.R
-import com.bagas.project.filmbase.data.Result
-import com.bagas.project.filmbase.data.local.FavoriteMovieEntity
+import com.bagas.project.filmbase.data.local.entities.FavoriteMovieEntity
 import com.bagas.project.filmbase.databinding.FragmentFavoriteMoviesBinding
-import com.bagas.project.filmbase.ui.ViewModelFactory
-import com.bagas.project.filmbase.ui.home.movie.MovieViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

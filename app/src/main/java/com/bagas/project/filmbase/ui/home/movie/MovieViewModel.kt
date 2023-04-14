@@ -1,21 +1,11 @@
 package com.bagas.project.filmbase.ui.home.movie
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.bagas.project.filmbase.BuildConfig
-import com.bagas.project.filmbase.data.remote.ApiConfig
 import com.bagas.project.filmbase.data.repository.MovieRepository
-import com.bagas.project.filmbase.data.responses.TopRatedMoviesItem
-import com.bagas.project.filmbase.data.responses.TopRatedMoviesResponse
-import com.bagas.project.filmbase.data.responses.UpcomingMoviesItem
-import com.bagas.project.filmbase.data.responses.UpcomingMoviesResponse
-import com.bumptech.glide.Glide.init
+import com.bagas.project.filmbase.data.repository.MovieRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel

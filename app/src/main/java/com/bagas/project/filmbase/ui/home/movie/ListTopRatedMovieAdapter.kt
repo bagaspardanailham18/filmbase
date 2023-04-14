@@ -8,9 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bagas.project.filmbase.BuildConfig
 import com.bagas.project.filmbase.R
-import com.bagas.project.filmbase.data.local.TopRatedMovieEntity
-import com.bagas.project.filmbase.data.local.UpcomingMovieEntity
-import com.bagas.project.filmbase.data.responses.TopRatedMoviesItem
+import com.bagas.project.filmbase.data.local.entities.TopRatedMovieEntity
 import com.bagas.project.filmbase.databinding.ItemRowTopRatedBinding
 import com.bagas.project.filmbase.ui.DetailActivity
 import com.bumptech.glide.Glide
