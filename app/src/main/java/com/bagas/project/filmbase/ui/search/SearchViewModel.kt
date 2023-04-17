@@ -4,12 +4,18 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.bagas.project.filmbase.BuildConfig
+import com.bagas.project.filmbase.data.Result
+import com.bagas.project.filmbase.data.local.entities.TrendingMovieEntity
+import com.bagas.project.filmbase.data.local.entities.TrendingTvshowEntity
 import com.bagas.project.filmbase.data.remote.ApiConfig
 import com.bagas.project.filmbase.data.repository.MovieRepository
 import com.bagas.project.filmbase.data.repository.MovieRepositoryImpl
 import com.bagas.project.filmbase.data.responses.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -24,6 +30,12 @@ class SearchViewModel @Inject constructor(private val movieRepository: MovieRepo
     private val _listTvshowSearch = MutableLiveData<List<TvshowSearchItem?>>()
     val listTvshowSearch: LiveData<List<TvshowSearchItem?>> = _listTvshowSearch
 
+    private val _trendingMovies = MutableLiveData<Result<List<TrendingMovieEntity?>>>()
+    val trendingMovies: LiveData<Result<List<TrendingMovieEntity?>>> = _trendingMovies
+
+    private val _trendingTvshows = MutableLiveData<Result<List<TrendingTvshowEntity?>>>()
+    val trendingTvshows: LiveData<Result<List<TrendingTvshowEntity?>>> = _trendingTvshows
+
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
@@ -31,9 +43,26 @@ class SearchViewModel @Inject constructor(private val movieRepository: MovieRepo
         const val TAG = "SearchViewModel"
     }
 
-    fun getTrendingMovies() = movieRepository.getTrendingMovies()
+    init {
+        getTrendingMovies()
+        getTrendingTvshow()
+    }
 
-    fun getTrendingTvshow() = movieRepository.getTrendingTvshows()
+    fun getTrendingMovies() {
+        viewModelScope.launch {
+            movieRepository.getTrendingMovies().collectLatest {
+                _trendingMovies.postValue(it)
+            }
+        }
+    }
+
+    fun getTrendingTvshow() {
+        viewModelScope.launch {
+            movieRepository.getTrendingTvshows().collectLatest {
+                _trendingTvshows.postValue(it)
+            }
+        }
+    }
 
     fun getMovieSearch(query: String?) {
         _isLoading.value = true

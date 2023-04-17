@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bagas.project.filmbase.data.Result
@@ -23,6 +24,7 @@ import com.bagas.project.filmbase.ui.SeeAllActivity.Companion.TOP_RATED_MOVIES
 import com.bagas.project.filmbase.ui.SeeAllActivity.Companion.UPCOMING_MOVIES
 import com.bagas.project.filmbase.ui.ViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MovieFragment : Fragment() {
@@ -72,24 +74,27 @@ class MovieFragment : Fragment() {
     }
 
     private fun getUpcomingMoviesData() {
-        viewModel.getUpcomingMovies().observe(viewLifecycleOwner) { result ->
-            if (result != null) {
-                when (result) {
-                    is Result.Loading -> {
-                        binding?.progressBar?.visibility = View.VISIBLE
-                    }
-                    is Result.Success -> {
-                        binding?.progressBar?.visibility = View.GONE
-                        val upcomingMoviesData = result.data
-                        upcomingMovieAdapter.submitList(upcomingMoviesData)
-                    }
-                    is Result.Error -> {
-                        binding?.progressBar?.visibility = View.GONE
-                        Toast.makeText(
-                            context,
-                            "Terjadi kesalahan" + result.error,
-                            Toast.LENGTH_SHORT
-                        ).show()
+        lifecycleScope.launch {
+            viewModel.getUpcomingMovies()
+            viewModel.upcomingMovies.observe(viewLifecycleOwner) { result ->
+                if (result != null) {
+                    when (result) {
+                        is Result.Loading -> {
+                            binding?.progressBar?.visibility = View.VISIBLE
+                        }
+                        is Result.Success -> {
+                            binding?.progressBar?.visibility = View.GONE
+                            val upcomingMoviesData = result.data
+                            upcomingMovieAdapter.submitList(upcomingMoviesData)
+                        }
+                        is Result.Error -> {
+                            binding?.progressBar?.visibility = View.GONE
+                            Toast.makeText(
+                                context,
+                                "Terjadi kesalahan" + result.error,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 }
             }
@@ -97,24 +102,27 @@ class MovieFragment : Fragment() {
     }
 
     private fun getTopRatedMoviesData() {
-        viewModel.getTopRatedMovies().observe(viewLifecycleOwner) { result ->
-            if (result != null) {
-                when (result) {
-                    is Result.Loading -> {
-                        binding?.progressBar?.visibility = View.VISIBLE
-                    }
-                    is Result.Success -> {
-                        binding?.progressBar?.visibility = View.GONE
-                        val topRatedMoviesData = result.data
-                        topRatedMovieAdapter.submitList(topRatedMoviesData)
-                    }
-                    is Result.Error -> {
-                        binding?.progressBar?.visibility = View.GONE
-                        Toast.makeText(
-                            context,
-                            "Terjadi kesalahan" + result.error,
-                            Toast.LENGTH_SHORT
-                        ).show()
+        lifecycleScope.launch {
+            viewModel.getTopRatedMovies()
+            viewModel.topRatedMovies.observe(viewLifecycleOwner) { result ->
+                if (result != null) {
+                    when (result) {
+                        is Result.Loading -> {
+                            binding?.progressBar?.visibility = View.VISIBLE
+                        }
+                        is Result.Success -> {
+                            binding?.progressBar?.visibility = View.GONE
+                            val topRatedMoviesData = result.data
+                            topRatedMovieAdapter.submitList(topRatedMoviesData)
+                        }
+                        is Result.Error -> {
+                            binding?.progressBar?.visibility = View.GONE
+                            Toast.makeText(
+                                context,
+                                "Terjadi kesalahan" + result.error,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 }
             }

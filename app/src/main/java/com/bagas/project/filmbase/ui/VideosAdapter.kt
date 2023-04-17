@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bagas.project.filmbase.BuildConfig
+import com.bagas.project.filmbase.R
 import com.bagas.project.filmbase.data.responses.MovieVideoItem
 import com.bagas.project.filmbase.data.responses.TvVideoItem
 import com.bagas.project.filmbase.databinding.ItemRowVideosBinding
@@ -25,6 +26,8 @@ class VideosAdapter(private val listMovieVideo: List<MovieVideoItem?>, private v
             holder.videoTitle.text = itemMovieVideo?.name.toString().trim()
             Glide.with(holder.itemView.context)
                 .load(BuildConfig.THUMBNAIL_YOUTUBE_URL + itemMovieVideo?.key + "/maxresdefault.jpg")
+                .error(R.drawable.image_load_error)
+                .placeholder(R.drawable.image_loading_placeholder)
                 .into(holder.videoThumbnail)
 
             holder.itemView.setOnClickListener {
@@ -36,6 +39,8 @@ class VideosAdapter(private val listMovieVideo: List<MovieVideoItem?>, private v
             holder.videoTitle.text = itemTvVideo?.name.toString().trim()
             Glide.with(holder.itemView.context)
                 .load(BuildConfig.THUMBNAIL_YOUTUBE_URL + itemTvVideo?.key + "/maxresdefault.jpg")
+                .error(R.drawable.image_load_error)
+                .placeholder(R.drawable.image_loading_placeholder)
                 .into(holder.videoThumbnail)
 
             holder.itemView.setOnClickListener {

@@ -91,10 +91,14 @@ class DetailActivity : AppCompatActivity() {
 
                             Glide.with(this@DetailActivity)
                                 .load(BuildConfig.IMAGE_URL + data.data.backdropPath)
+                                .error(R.drawable.image_load_error)
+                                .placeholder(R.drawable.image_loading_placeholder)
                                 .into(binding.backdrop)
 
                             Glide.with(this@DetailActivity)
                                 .load(BuildConfig.IMAGE_URL + data.data.posterPath)
+                                .error(R.drawable.image_load_error)
+                                .placeholder(R.drawable.image_loading_placeholder)
                                 .into(binding.tvDetailPoster)
 
                             detailViewModel.getFavoritedMovieById(data.data.id).observe(this@DetailActivity) { favoritedData ->

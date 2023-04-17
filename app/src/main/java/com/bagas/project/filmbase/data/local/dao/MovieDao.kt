@@ -6,6 +6,7 @@ import com.bagas.project.filmbase.data.local.entities.FavoriteMovieEntity
 import com.bagas.project.filmbase.data.local.entities.TopRatedMovieEntity
 import com.bagas.project.filmbase.data.local.entities.TrendingMovieEntity
 import com.bagas.project.filmbase.data.local.entities.UpcomingMovieEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MovieDao {
@@ -19,7 +20,7 @@ interface MovieDao {
     suspend fun deleteAllUpcomingMovie()
 
     @Query("SELECT * FROM upcoming_movie_entities ORDER BY release_date ASC")
-    fun getUpcomingMovies(): LiveData<List<UpcomingMovieEntity>>
+    fun getUpcomingMovies(): Flow<List<UpcomingMovieEntity>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertTopRatedMovies(topRatedMovie: List<TopRatedMovieEntity>)
@@ -28,7 +29,7 @@ interface MovieDao {
     suspend fun deleteAllTopRatedMovie()
 
     @Query("SELECT * FROM top_rated_movie_entities ORDER BY vote_average DESC")
-    fun getTopRatedMovies(): LiveData<List<TopRatedMovieEntity>>
+    fun getTopRatedMovies(): Flow<List<TopRatedMovieEntity>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertTrendingMovie(trendingMovie: List<TrendingMovieEntity>)
@@ -37,7 +38,7 @@ interface MovieDao {
     suspend fun deleteAllTrendingMovie()
 
     @Query("SELECT * FROM trending_movie_entities ORDER BY release_date ASC")
-    fun getTrendingMovies(): LiveData<List<TrendingMovieEntity>>
+    fun getTrendingMovies(): Flow<List<TrendingMovieEntity>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertFavoriteMovie(movie: FavoriteMovieEntity)

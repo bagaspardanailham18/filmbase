@@ -6,6 +6,7 @@ import com.bagas.project.filmbase.data.local.entities.AiringTodayTvEntity
 import com.bagas.project.filmbase.data.local.entities.FavoriteTvEntity
 import com.bagas.project.filmbase.data.local.entities.TopRatedTvEntity
 import com.bagas.project.filmbase.data.local.entities.TrendingTvshowEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TvshowDao {
@@ -17,7 +18,7 @@ interface TvshowDao {
     suspend fun deleteAllAiringToday()
 
     @Query("SELECT * FROM airing_today_tv_entities ORDER BY first_air_date ASC")
-    fun getAiringTodayTv(): LiveData<List<AiringTodayTvEntity>>
+    fun getAiringTodayTv(): Flow<List<AiringTodayTvEntity>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertTopRatedTv(topRatedTv: List<TopRatedTvEntity>)
@@ -26,7 +27,7 @@ interface TvshowDao {
     suspend fun deleteAllTopRatedTv()
 
     @Query("SELECT * FROM top_rated_tv_entities ORDER BY vote_average DESC")
-    fun getTopRatedTv(): LiveData<List<TopRatedTvEntity>>
+    fun getTopRatedTv(): Flow<List<TopRatedTvEntity>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertTrendingTvshow(trendingTvshow: List<TrendingTvshowEntity>)
@@ -35,7 +36,7 @@ interface TvshowDao {
     suspend fun deleteAllTrendingTvshow()
 
     @Query("SELECT * FROM trending_tv_entities ORDER BY first_air_date ASC")
-    fun getTrendingTvshows(): LiveData<List<TrendingTvshowEntity>>
+    fun getTrendingTvshows(): Flow<List<TrendingTvshowEntity>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertFavoriteTvshow(tv: FavoriteTvEntity)

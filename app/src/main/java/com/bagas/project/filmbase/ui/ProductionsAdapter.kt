@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bagas.project.filmbase.BuildConfig
+import com.bagas.project.filmbase.R
 import com.bagas.project.filmbase.data.responses.MovieProductionCompaniesItem
 import com.bagas.project.filmbase.data.responses.TvProductionCompaniesItem
 import com.bagas.project.filmbase.databinding.ItemRowProductionBinding
@@ -24,12 +25,16 @@ class ProductionsAdapter(private val listMovieProduction: List<MovieProductionCo
             holder.companyName.text = movieProductionsItem?.name.toString().trim()
             Glide.with(holder.itemView.context)
                 .load(BuildConfig.IMAGE_URL + movieProductionsItem?.logoPath)
+                .error(R.drawable.image_load_error)
+                .placeholder(R.drawable.image_loading_placeholder)
                 .into(holder.companyIcon)
         } else {
             val tvProductionsItem = listTvProduction[position]
             holder.companyName.text = tvProductionsItem?.name.toString().trim()
             Glide.with(holder.itemView.context)
                 .load(BuildConfig.IMAGE_URL + tvProductionsItem?.logoPath)
+                .error(R.drawable.image_load_error)
+                .placeholder(R.drawable.image_loading_placeholder)
                 .into(holder.companyIcon)
         }
     }

@@ -11,9 +11,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface MovieRepository {
 
-    fun getUpcomingMovies(): LiveData<Result<List<UpcomingMovieEntity>>>
+    fun getUpcomingMovies(): Flow<Result<List<UpcomingMovieEntity>>>
 
-    fun getTopRatedMovies(): LiveData<Result<List<TopRatedMovieEntity>>>
+    fun getTopRatedMovies(): Flow<Result<List<TopRatedMovieEntity>>>
 
     suspend fun getMovieDetail(movieId: Int?): Flow<Result<MovieDetailResponse>>
 
@@ -23,12 +23,12 @@ interface MovieRepository {
 
     suspend fun getTvshowVideos(tvshowId: Int?): Flow<Result<TvshowVideoResponse>>
 
-    fun getAiringTodayTv(): LiveData<Result<List<AiringTodayTvEntity>>>
+    fun getAiringTodayTv(): Flow<Result<List<AiringTodayTvEntity>>>
 
-    fun getTopRatedTvshow(): LiveData<Result<List<TopRatedTvEntity>>>
+    fun getTopRatedTvshow(): Flow<Result<List<TopRatedTvEntity>>>
 
-    fun getTrendingMovies(): LiveData<Result<List<TrendingMovieEntity>>>
+    fun getTrendingMovies(): Flow<Result<List<TrendingMovieEntity>>>
 
-    fun getTrendingTvshows(): LiveData<Result<List<TrendingTvshowEntity>>>
+    fun getTrendingTvshows(): Flow<Result<List<TrendingTvshowEntity>>>
 
 }

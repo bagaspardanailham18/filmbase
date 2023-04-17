@@ -15,11 +15,11 @@ class MovieRepositoryImpl @Inject constructor(
     private val remoteDataSource: RemoteDataSource
 ) : MovieRepository {
 
-    override fun getUpcomingMovies(): LiveData<Result<List<UpcomingMovieEntity>>> {
+    override fun getUpcomingMovies(): Flow<Result<List<UpcomingMovieEntity>>> {
         return remoteDataSource.getUpcomingMovies()
     }
 
-    override fun getTopRatedMovies(): LiveData<Result<List<TopRatedMovieEntity>>> {
+    override fun getTopRatedMovies(): Flow<Result<List<TopRatedMovieEntity>>> {
         return remoteDataSource.getTopRatedMovies()
     }
 
@@ -39,19 +39,19 @@ class MovieRepositoryImpl @Inject constructor(
         return remoteDataSource.getTvshowVideos(tvshowId)
     }
 
-    override fun getAiringTodayTv(): LiveData<Result<List<AiringTodayTvEntity>>> {
+    override fun getAiringTodayTv(): Flow<Result<List<AiringTodayTvEntity>>> {
         return remoteDataSource.getAiringTodayTv()
     }
 
-    override fun getTopRatedTvshow(): LiveData<Result<List<TopRatedTvEntity>>> {
+    override fun getTopRatedTvshow(): Flow<Result<List<TopRatedTvEntity>>> {
         return remoteDataSource.getTopRatedTvshow()
     }
 
-    override fun getTrendingMovies(): LiveData<Result<List<TrendingMovieEntity>>> {
+    override fun getTrendingMovies(): Flow<Result<List<TrendingMovieEntity>>> {
         return remoteDataSource.getTrendingMovies()
     }
 
-    override fun getTrendingTvshows(): LiveData<Result<List<TrendingTvshowEntity>>> {
+    override fun getTrendingTvshows(): Flow<Result<List<TrendingTvshowEntity>>> {
         return remoteDataSource.getTrendingTvshows()
     }
 

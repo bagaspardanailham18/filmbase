@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bagas.project.filmbase.R
 import com.bagas.project.filmbase.data.Result
@@ -17,6 +18,7 @@ import com.bagas.project.filmbase.databinding.FragmentTvshowBinding
 import com.bagas.project.filmbase.ui.DetailActivity
 import com.bagas.project.filmbase.ui.ViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class TvshowFragment : Fragment() {
@@ -58,47 +60,52 @@ class TvshowFragment : Fragment() {
 //            showProgressbar(isLoading)
 //        }
 
-        viewModel.getAiringTodayTvshow().observe(viewLifecycleOwner) { result ->
-            if (result != null) {
-                when (result) {
-                    is Result.Loading -> {
-                        binding?.progressBar?.visibility = View.VISIBLE
-                    }
-                    is Result.Success -> {
-                        binding?.progressBar?.visibility = View.GONE
-                        val airingTodayTvData = result.data
-                        airingTodayTvshowAdapter.submitList(airingTodayTvData)
-                    }
-                    is Result.Error -> {
-                        binding?.progressBar?.visibility = View.GONE
-                        Toast.makeText(
-                            context,
-                            "Terjadi kesalahan" + result.error,
-                            Toast.LENGTH_SHORT
-                        ).show()
+        lifecycleScope.launch {
+            viewModel.getAiringTodayTvshow()
+            viewModel.getTopRatedTvshow()
+
+            viewModel.airingTodayTvshows.observe(viewLifecycleOwner) { result ->
+                if (result != null) {
+                    when (result) {
+                        is Result.Loading -> {
+                            binding?.progressBar?.visibility = View.VISIBLE
+                        }
+                        is Result.Success -> {
+                            binding?.progressBar?.visibility = View.GONE
+                            val airingTodayTvData = result.data
+                            airingTodayTvshowAdapter.submitList(airingTodayTvData)
+                        }
+                        is Result.Error -> {
+                            binding?.progressBar?.visibility = View.GONE
+                            Toast.makeText(
+                                context,
+                                "Terjadi kesalahan" + result.error,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 }
             }
-        }
 
-        viewModel.getTopRatedTvshow().observe(viewLifecycleOwner) { result ->
-            if (result != null) {
-                when (result) {
-                    is Result.Loading -> {
-                        binding?.progressBar?.visibility = View.VISIBLE
-                    }
-                    is Result.Success -> {
-                        binding?.progressBar?.visibility = View.GONE
-                        val topRatedTvData = result.data
-                        topRatedTvshowAdapter.submitList(topRatedTvData)
-                    }
-                    is Result.Error -> {
-                        binding?.progressBar?.visibility = View.GONE
-                        Toast.makeText(
-                            context,
-                            "Terjadi Kesalahan" + result.error,
-                            Toast.LENGTH_SHORT
-                        ).show()
+            viewModel.topRatedTvshows.observe(viewLifecycleOwner) { result ->
+                if (result != null) {
+                    when (result) {
+                        is Result.Loading -> {
+                            binding?.progressBar?.visibility = View.VISIBLE
+                        }
+                        is Result.Success -> {
+                            binding?.progressBar?.visibility = View.GONE
+                            val topRatedTvData = result.data
+                            topRatedTvshowAdapter.submitList(topRatedTvData)
+                        }
+                        is Result.Error -> {
+                            binding?.progressBar?.visibility = View.GONE
+                            Toast.makeText(
+                                context,
+                                "Terjadi Kesalahan" + result.error,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 }
             }

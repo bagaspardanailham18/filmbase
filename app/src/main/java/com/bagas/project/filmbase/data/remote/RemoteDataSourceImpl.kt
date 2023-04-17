@@ -12,8 +12,8 @@ import com.bagas.project.filmbase.data.responses.MovieDetailResponse
 import com.bagas.project.filmbase.data.responses.MovieVideoResponse
 import com.bagas.project.filmbase.data.responses.TvshowDetailResponse
 import com.bagas.project.filmbase.data.responses.TvshowVideoResponse
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
 import retrofit2.HttpException
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -23,7 +23,7 @@ class RemoteDataSourceImpl @Inject constructor(
     private val movieRoomDatabase: MovieRoomDatabase,
     private val apiService: ApiService
 ): RemoteDataSource {
-    override fun getUpcomingMovies(): LiveData<Result<List<UpcomingMovieEntity>>> = liveData {
+    override fun getUpcomingMovies(): Flow<Result<List<UpcomingMovieEntity>>> = flow {
         emit(Result.Loading)
         try {
             val response = apiService.getUpcomingMovies(BuildConfig.API_KEY, 1)
@@ -45,13 +45,13 @@ class RemoteDataSourceImpl @Inject constructor(
             Log.d("MovieRepository", "getUpcomingMovies : ${e.message.toString()}")
             emit(Result.Error(e.message.toString()))
         }
-        val localData: LiveData<Result<List<UpcomingMovieEntity>>> = movieRoomDatabase.movieDao().getUpcomingMovies().map {
+        val localData: Flow<Result<List<UpcomingMovieEntity>>> = movieRoomDatabase.movieDao().getUpcomingMovies().map {
             Result.Success(it)
         }
-        emitSource(localData)
-    }
+        emitAll(localData)
+    }.flowOn(Dispatchers.IO)
 
-    override fun getTopRatedMovies(): LiveData<Result<List<TopRatedMovieEntity>>> = liveData {
+    override fun getTopRatedMovies(): Flow<Result<List<TopRatedMovieEntity>>> = flow {
         emit(Result.Loading)
         try {
             val response = apiService.getTopRatedMovies(BuildConfig.API_KEY)
@@ -73,11 +73,11 @@ class RemoteDataSourceImpl @Inject constructor(
             Log.d("MovieRepository", "getTopRatedMovies : ${e.message.toString()}")
             emit(Result.Error(e.message.toString()))
         }
-        val localData: LiveData<Result<List<TopRatedMovieEntity>>> = movieRoomDatabase.movieDao().getTopRatedMovies().map {
+        val localData: Flow<Result<List<TopRatedMovieEntity>>> = movieRoomDatabase.movieDao().getTopRatedMovies().map {
             Result.Success(it)
         }
-        emitSource(localData)
-    }
+        emitAll(localData)
+    }.flowOn(Dispatchers.IO)
 
     override suspend fun getMovieDetail(movieId: Int?): Flow<Result<MovieDetailResponse>> = flow {
         emit(Result.Loading)
@@ -95,7 +95,7 @@ class RemoteDataSourceImpl @Inject constructor(
                 Result.Error("No internet connection")
             }
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
     override suspend fun getTvshowDetail(tvshowId: Int?): Flow<Result<TvshowDetailResponse>> = flow {
         emit(Result.Loading)
@@ -113,7 +113,7 @@ class RemoteDataSourceImpl @Inject constructor(
                 Result.Error("No internet connection")
             }
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
     override suspend fun getMovieVideos(movieId: Int?): Flow<Result<MovieVideoResponse>> = flow {
         emit(Result.Loading)
@@ -131,7 +131,7 @@ class RemoteDataSourceImpl @Inject constructor(
                 Result.Error("No internet connection")
             }
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
     override suspend fun getTvshowVideos(tvshowId: Int?): Flow<Result<TvshowVideoResponse>> = flow {
         emit(Result.Loading)
@@ -149,9 +149,9 @@ class RemoteDataSourceImpl @Inject constructor(
                 Result.Error("No internet connection")
             }
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
-    override fun getAiringTodayTv(): LiveData<Result<List<AiringTodayTvEntity>>> = liveData {
+    override fun getAiringTodayTv(): Flow<Result<List<AiringTodayTvEntity>>> = flow {
         emit(Result.Loading)
         try {
             val response = apiService.getAiringTodayTvshow(BuildConfig.API_KEY)
@@ -173,13 +173,13 @@ class RemoteDataSourceImpl @Inject constructor(
             Log.d("MovieRepository", "getAiringTodayTv : ${e.message.toString()}")
             emit(Result.Error(e.message.toString()))
         }
-        val localData: LiveData<Result<List<AiringTodayTvEntity>>> = movieRoomDatabase.tvshowDao().getAiringTodayTv().map {
+        val localData: Flow<Result<List<AiringTodayTvEntity>>> = movieRoomDatabase.tvshowDao().getAiringTodayTv().map {
             Result.Success(it)
         }
-        emitSource(localData)
-    }
+        emitAll(localData)
+    }.flowOn(Dispatchers.IO)
 
-    override fun getTopRatedTvshow(): LiveData<Result<List<TopRatedTvEntity>>> = liveData {
+    override fun getTopRatedTvshow(): Flow<Result<List<TopRatedTvEntity>>> = flow {
         emit(Result.Loading)
         try {
             val response = apiService.getTopRatedTvshow(BuildConfig.API_KEY)
@@ -201,13 +201,13 @@ class RemoteDataSourceImpl @Inject constructor(
             Log.d("MovieRepository", "getTopRatedTvshows : ${e.message.toString()}")
             emit(Result.Error(e.message.toString()))
         }
-        val localData: LiveData<Result<List<TopRatedTvEntity>>> = movieRoomDatabase.tvshowDao().getTopRatedTv().map {
+        val localData: Flow<Result<List<TopRatedTvEntity>>> = movieRoomDatabase.tvshowDao().getTopRatedTv().map {
             Result.Success(it)
         }
-        emitSource(localData)
-    }
+        emitAll(localData)
+    }.flowOn(Dispatchers.IO)
 
-    override fun getTrendingMovies(): LiveData<Result<List<TrendingMovieEntity>>> = liveData {
+    override fun getTrendingMovies(): Flow<Result<List<TrendingMovieEntity>>> = flow {
         emit(Result.Loading)
         try {
             val response = apiService.getTrendingMovies(BuildConfig.API_KEY)
@@ -229,13 +229,13 @@ class RemoteDataSourceImpl @Inject constructor(
             Log.d("MovieRepository", "getTrendingMovies : ${e.message.toString()}")
             emit(Result.Error(e.message.toString()))
         }
-        val localData: LiveData<Result<List<TrendingMovieEntity>>> = movieRoomDatabase.movieDao().getTrendingMovies().map {
+        val localData: Flow<Result<List<TrendingMovieEntity>>> = movieRoomDatabase.movieDao().getTrendingMovies().map {
             Result.Success(it)
         }
-        emitSource(localData)
-    }
+        emitAll(localData)
+    }.flowOn(Dispatchers.IO)
 
-    override fun getTrendingTvshows(): LiveData<Result<List<TrendingTvshowEntity>>> = liveData {
+    override fun getTrendingTvshows(): Flow<Result<List<TrendingTvshowEntity>>> = flow {
         emit(Result.Loading)
         try {
             val response = apiService.getTrendingTvshow(BuildConfig.API_KEY)
@@ -257,9 +257,9 @@ class RemoteDataSourceImpl @Inject constructor(
             Log.d("MovieRepository", "getTrendingTv : ${e.message.toString()}")
             emit(Result.Error(e.message.toString()))
         }
-        val localData: LiveData<Result<List<TrendingTvshowEntity>>> = movieRoomDatabase.tvshowDao().getTrendingTvshows().map {
+        val localData: Flow<Result<List<TrendingTvshowEntity>>> = movieRoomDatabase.tvshowDao().getTrendingTvshows().map {
             Result.Success(it)
         }
-        emitSource(localData)
-    }
+        emitAll(localData)
+    }.flowOn(Dispatchers.IO)
 }
